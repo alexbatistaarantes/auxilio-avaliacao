@@ -1,0 +1,33 @@
+{% extends 'auxilioavaliacao/layout.html' %}
+
+{% block title %} Auxílio Avaliação {% endblock %}
+
+{% load static %}
+
+{% block style_imports %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="home">
+    <div id="images">
+        <h2> Imagens </h2>
+
+        <a href="{% url 'auxilioavaliacao:newimage' %}">
+            <button> Nova imagem </button>
+        </a>
+
+        <ul>
+            {% for image in images %}
+                <li>
+                    <a href="{% url 'auxilioavaliacao:image' image.id %}">
+                        <img class="image-preview" src="{{ image.file.url }}" alt="">
+                    </a>
+                </li>
+            {% empty %}
+                <p> Nenhuma imagem </p>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

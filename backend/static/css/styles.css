@@ -1,0 +1,32 @@
+/* ==================== */
+/* Home */
+
+div#home img.image-preview {
+    height: 17rem;
+    width: auto;
+}
+
+div#home div#images > ul {
+    display: flex;
+    
+    list-style: none;
+}
+
+div#home div#images > ul > li {
+    flex: 0 1 auto;
+    margin: 1.2rem 1.2rem;
+
+    border: 2px solid black;
+}
+
+/* ================== */
+/* Image */
+
+div#image img {
+    max-width: 500px;
+    height: auto;
+
+    border: 2px solid black;
+}
+
+/* ================== */
