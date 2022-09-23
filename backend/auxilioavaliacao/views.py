@@ -80,3 +80,35 @@ def field(request, assignment_id, field_id):
         'field': field
     }
     return render(request, 'auxilioavaliacao/field.html', context)
+
+def new_submission(request, assignment_id):
+    """ Página para adicionar apenas uma nova Entrega (:model:`auxilioavaliacao.Submission`)
+    """
+
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+    if request.method == 'POST':
+        form = SubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            submission = Submission(**data, assignment=assignment)
+            submission.save()
+
+            return HttpResponseRedirect(reverse('auxilioavaliacao:assignment', args=[assignment.id]))
+    else:
+        form = SubmissionForm()
+
+    context = {
+        'form': form,
+        'assignment': assignment
+    }
+    return render(request, 'auxilioavaliacao/new_submission.html', context)
+
+def submission(request, assignment_id, submission_id):
+
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+    submission = get_object_or_404(Submission, pk=submission_id)
+    context = {
+        'assignment': assignment,
+        'submission': submission
+    }
+    return render(request, 'auxilioavaliacao/submission.html', context)

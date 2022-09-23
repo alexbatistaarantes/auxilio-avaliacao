@@ -9,4 +9,6 @@ urlpatterns = [
     path('assignment/<int:assignment_id>/', views.assignment, name='assignment'),
     path('assignment/<int:assignment_id>/field/<int:field_id>/', views.field, name='field'),
     path('assignment/<int:assignment_id>/new_field/', views.new_field, name='newfield'),
+    path('assignment/<int:assignment_id>/new_submission/', views.new_submission, name='newsubmission'),
+    path('assignment/<int:assignment_id>/submission/<int:submission_id>/', views.submission, name='submission'),
 ]

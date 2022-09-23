@@ -43,7 +43,7 @@ class Field(models.Model):
     pctY2 = models.FloatField(null=True, blank=True, help_text="O percentual do ponto direito inferior em relação a altura da imagem template")
 
     def save(self, *args, **kwargs):
-        """ Obtém os percentuais dos pontos
+        """ Obtém imagem do campo e os percentuais dos pontos
         """
 
         # Obtendo imagem do campo a partir da imagem template
@@ -57,7 +57,7 @@ class Field(models.Model):
         self.pctX2 = self.x2 / template_width
         self.pctY2 = self.y2 / template_height
         
-        super(Field, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 class Submission(models.Model):
     """ Guarda uma entrega de uma Atividade (:model:`auxilioavalicao.Assignment`) de um aluno
@@ -80,6 +80,34 @@ class Submission(models.Model):
             models.UniqueConstraint('assignment', 'studentId', name='unique_student_submission_per_assignment')
         ]
 
+    def save(self, *args, **kwargs):
+        """ Automaticamente obtém as respostas (:model:`auxilioavaliacao.Answer`) a partir dos campos (:model:`auxilioavaliacao.Field`) da atividade (:model:`auxilioavaliacao.Assignment`)
+        """
+
+        super().save(*args, **kwargs)
+
+        fields = self.assignment.field_set.all()
+        for field in fields:
+            x1 = int(self.width * field.pctX1)
+            y1 = int(self.height * field.pctY1)
+            x2 = int(self.width * field.pctX2)
+            y2 = int(self.height * field.pctY2)
+
+            answer = Answer(
+                submission=self,
+                field=field,
+                x1=x1,
+                y1=y1,
+                x2=x2,
+                y2=y2
+            )
+            answer.save()
+
+        super().save(*args, **kwargs)
+
+    def save_answer(self, field):
+        pass
+
 class Answer(models.Model):
     """ Guarda a imagem da resposta de uma Entrega (:model:`auxilioavalicao.Submission`)
     """
@@ -100,3 +128,13 @@ class Answer(models.Model):
         constraints = [
             models.UniqueConstraint('submission', 'field', name='unique_field_per_submission')
         ]
+
+    def save(self, *args, **kwargs):
+        """ Obtém imagem da resposta
+        """
+
+        # Obtendo imagem do campo a partir da imagem template
+        self.submission.image.open()
+        self.image = crop_image(self.submission.image, (self.x1, self.y1, self.x2, self.y2))
+
+        super().save(*args, **kwargs)

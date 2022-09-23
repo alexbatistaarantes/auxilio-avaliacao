@@ -25,6 +25,26 @@
                 <p> Nenhum campo </p>
             {% endfor %}
         </ul>
+
+    <div id="submissions"></div>
+        <h2> Entregas </h2>
+
+        <a href="{% url 'auxilioavaliacao:newsubmission' assignment.id %}">
+            <button> Adicionar nova entrega </button>
+        </a>
+
+        <ul>
+            {% for submission in assignment.submission_set.all %}
+                <a href="{% url 'auxilioavaliacao:submission' assignment.id submission.id %}">
+                    <li>
+                        <h3> {{ submission.studentId }} </h3>
+                        <img src="{{ submission.image.url }}" alt="Imagem da entrega">
+                    </li>
+                </a>
+            {% empty %}
+                <p> Nenhuma entrega </p>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 {% endblock %}
