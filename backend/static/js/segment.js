@@ -23,13 +23,15 @@ st.addEventListener('update', () => {
     form.querySelector('input#id_x1').value = x1;
     form.querySelector('input#id_y1').value = y1;
     form.querySelector('input#id_x2').value = x2;
-    form.querySelector('input#id_y2').value = y1;
+    form.querySelector('input#id_y2').value = y2;
 
     /* Salva a imagem da seleção em base64 no formulário */
+    /*
     form.querySelector('input#submit').disabled = true;
     resize.result({type: 'base64', size: 'original'})
     .then((image_base64) => {
         form.querySelector('input#submit').disabled = false;
         form.querySelector('input#image_base64').value = image_base64;
     });
+    */
 });

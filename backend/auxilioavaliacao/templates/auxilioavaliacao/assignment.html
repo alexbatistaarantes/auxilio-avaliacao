@@ -1,0 +1,29 @@
+{% extends 'auxilioavaliacao/layout.html' %}
+
+{% block title %} Atividade {% endblock %}
+
+{% block content %}
+<div id="assignment">
+    <img src="{{ assignment.template_image.url }}" alt="Template da atividade">
+
+    <div id="fields">
+        <h2> Campos </h2>
+        
+        <a href="{% url 'auxilioavaliacao:newfield' assignment.id %}">
+            <button> Adicionar novo campo </button>
+        </a>
+        
+        <ul>
+            {% for field in assignment.field_set.all %}
+                <li>
+                    <a href="{% url 'auxilioavaliacao:field' assignment.id field.id %}">
+                        <h3> {{ field.label }} </h3>
+                    </a>
+                </li>
+            {% empty %}
+                <p> Nenhum campo </p>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'auxilioavaliacao/layout.html' %}
+
+{% block content %}
+<div id="field">
+    <a href="{% url 'auxilioavaliacao:assignment' assignment.id %}">{{ assignment.title }}</a>
+
+    <h2>{{ field.label }}</h2>
+    {{ field.x1 }}
+    {{ field.y1 }}
+    {{ field.x2 }}
+    {{ field.y2 }}
+
+    {{ field.pctX1 }}
+    {{ field.pctY1 }}
+    {{ field.pctX2 }}
+    {{ field.pctY2 }}
+    <!-- <img src="{{ field.file.url }}" alt="{{ region.label }}"> -->
+</div>
+{% endblock %}

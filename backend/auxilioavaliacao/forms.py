@@ -1,13 +1,19 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, IntegerField
 
-from .models import Image, Region
+from .models import *
 
-class ImageForm(ModelForm):
+class AssignmentForm(ModelForm):
     class Meta:
-        model = Image
-        fields = ['file']
+        model = Assignment
+        fields = ['title', 'template_image']
 
-class RegionForm(ModelForm):
+class FieldForm(ModelForm):
+
     class Meta:
-        model = Region
-        exclude = ('from_image','file')
+        model = Field
+        exclude = ('assignment', 'pctX1', 'pctY1', 'pctX2', 'pctY2')
+
+class SubmissionForm(ModelForm):
+    class Meta:
+        model = Submission
+        fields = ['studentId', 'image']

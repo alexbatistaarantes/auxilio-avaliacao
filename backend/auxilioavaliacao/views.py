@@ -3,79 +3,80 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.core.files.base import ContentFile
 
-from .models import Image, Region
-from .forms import ImageForm, RegionForm
+from .models import *
+from .forms import *
 import base64
 
 def home(request):
-    """ Homepage com a lista de todas as imagens criadas
+    """ Homepage com a lista de todas as Atividade (:model:`auxilioavalicao.Assignment`) criadas
     """
 
-    images = Image.objects.all()
-    context = { 'images': images }
+    assignments = Assignment.objects.all()
+    context = { 'assignments': assignments }
     return render(request, 'auxilioavaliacao/home.html', context)
 
-def new_image(request):
-    """ Formulário para inserir nova imagem
-        - Se inserção bem sucedida, redireciona para a página da imagem inserida
+def new_assignment(request):
+    """ Formulário para inserir nova atividade (:model:`auxilioavalicao.Assignment`)
     """
 
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
+        form = AssignmentForm(request.POST, request.FILES)
         if form.is_valid():
-            image = form.save()
-            return HttpResponseRedirect(reverse('auxilioavaliacao:image', args=[image.id]))
+            assignment = form.save()
+            return HttpResponseRedirect(reverse('auxilioavaliacao:assignment', args=[assignment.id]))
     else:
-        form = ImageForm()
+        form = AssignmentForm()
 
     context = {'form': form}
-    return render(request, 'auxilioavaliacao/new_image.html', context)
+    return render(request, 'auxilioavaliacao/new_assignment.html', context)
 
-def image(request, image_id):
-    """ Mostra a imagem e suas regiões
+def assignment(request, assignment_id):
+    """ Mostra a atividade (:model:`auxilioavaliacao.Assignment`), seus campos (:model:`auxilioavaliacao.Field`), e entregas (:model:`auxilioavaliacao.Submission`)
     """
 
-    image = get_object_or_404(Image, pk=image_id)
-    return render(request, 'auxilioavaliacao/image.html', {'image': image})
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+    context = {
+        'assignment': assignment
+    }
+    return render(request, 'auxilioavaliacao/assignment.html', context)
 
-def new_region(request, image_id):
-    """ Ferramenta de seleção de uma nova região de uma imagem
-        - Se bem sucedido, redireciona para a página da imagem
+def new_field(request, assignment_id):
+    """ Ferramenta de seleção de uma nova região que representa um campo (:model:`auxilioavaliacao.Field`) de uma atividade (:model:`auxilioavaliacao.Assignment`)
     """
     
-    image = get_object_or_404(Image, pk=image_id)
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
     if request.method == "POST":
-        form = RegionForm(request.POST)
+        form = FieldForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            region = Region(**data, from_image=image)
-            region.save()
+            field = Field(**data, assignment=assignment)
+            field.save()
 
             # Salva a imagem da região a partir do campo da imagem em base64, feita pelo Croppie
-            format, file_base64 = request.POST['image_base64'].split(';base64,')
-            extension = format.split('/')[-1]
-            file = ContentFile(base64.b64decode(file_base64))
-            filename = f"{region.id}.{extension}"
-            region.file.save(filename, file, save=True)
+            # format, file_base64 = request.POST['image_base64'].split(';base64,')
+            # extension = format.split('/')[-1]
+            # file = ContentFile(base64.b64decode(file_base64))
+            # filename = f"{field.id}.{extension}"
+            # field.file.save(filename, file, save=True)
 
-            return HttpResponseRedirect(reverse('auxilioavaliacao:image', args=[image.id]))
+            return HttpResponseRedirect(reverse('auxilioavaliacao:assignment', args=[assignment.id]))
     else:
-        form = RegionForm()
+        form = FieldForm()
 
     context = {
-        'image': image,
+        'assignment': assignment,
         'form': form
     }
-    return render(request, 'auxilioavaliacao/new_region.html', context)
+    return render(request, 'auxilioavaliacao/new_field.html', context)
 
-def region(request, image_id, region_id):
-    """ Página da região
+def field(request, assignment_id, field_id):
+    """ Página do campo (:model:`auxilioavaliacao.Field`)
     """
 
-    image = get_object_or_404(Image, pk=image_id)
-    region = get_object_or_404(Region, pk=region_id)
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+    field = get_object_or_404(Field, pk=field_id)
     context = {
-        'image': image,
-        'region': region
+        'assignment': assignment,
+        'field': field
     }
-    return render(request, 'auxilioavaliacao/region.html', context)
+    return render(request, 'auxilioavaliacao/field.html', context)
