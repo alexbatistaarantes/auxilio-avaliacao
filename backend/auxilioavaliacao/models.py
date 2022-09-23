@@ -1,6 +1,8 @@
 from tkinter import CASCADE
 from django.db import models
 
+from .utils import crop_image
+
 def image_directory_path(instance, filename):
     return f"images/{filename}"
 
@@ -26,7 +28,11 @@ class Field(models.Model):
 
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, help_text="A atividade de qual o campo faz parte")
     label = models.CharField(max_length=50, null=False, blank=False, help_text="O nome do campo")
+    image = models.ImageField(upload_to='fields', width_field='width', height_field='height', null=True, blank=True, help_text="A imagem do campo")
+    width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem do campo")
+    height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem do campo")
     # MELHORAR: salvar apenas o percentual
+    # Usar Annotorious (https://recogito.github.io/annotorious/) que tem como salvar o percentual
     x1 = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
     y1 = models.IntegerField(null=False, blank=False, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
     x2 = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto direito inferior em referência a imagem da entrega")
@@ -40,15 +46,18 @@ class Field(models.Model):
         """ Obtém os percentuais dos pontos
         """
 
-        super().save(*args, **kwargs)
+        # Obtendo imagem do campo a partir da imagem template
+        self.image = crop_image(self.assignment.template_image, (self.x1, self.y1, self.x2, self.y2))
+        
+        # Obtendo percentuais
         template_width = self.assignment.width
         template_height = self.assignment.height
         self.pctX1 = self.x1 / template_width
         self.pctY1 = self.y1 / template_height
         self.pctX2 = self.x2 / template_width
         self.pctY2 = self.y2 / template_height
+        
         super(Field, self).save(*args, **kwargs)
-
 
 class Submission(models.Model):
     """ Guarda uma entrega de uma Atividade (:model:`auxilioavalicao.Assignment`) de um aluno

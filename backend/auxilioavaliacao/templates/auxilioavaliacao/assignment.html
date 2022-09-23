@@ -15,11 +15,12 @@
         
         <ul>
             {% for field in assignment.field_set.all %}
-                <li>
-                    <a href="{% url 'auxilioavaliacao:field' assignment.id field.id %}">
+                <a href="{% url 'auxilioavaliacao:field' assignment.id field.id %}">
+                    <li>
                         <h3> {{ field.label }} </h3>
-                    </a>
-                </li>
+                        <img src="{{ field.image.url }}" alt="Imagem do campo">
+                    </li>
+                </a>
             {% empty %}
                 <p> Nenhum campo </p>
             {% endfor %}

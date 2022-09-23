@@ -23,9 +23,9 @@ div#home div#assignments > ul > li {
 }
 
 /* ================== */
-/* Image */
+/* Assignment */
 
-div#image img {
+div#assignment img {
     max-width: 500px;
     height: auto;
 

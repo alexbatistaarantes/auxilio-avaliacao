@@ -11,7 +11,7 @@ class FieldForm(ModelForm):
 
     class Meta:
         model = Field
-        exclude = ('assignment', 'pctX1', 'pctY1', 'pctX2', 'pctY2')
+        fields = ['label', 'x1', 'y1', 'x2', 'y2']
 
 class SubmissionForm(ModelForm):
     class Meta:
