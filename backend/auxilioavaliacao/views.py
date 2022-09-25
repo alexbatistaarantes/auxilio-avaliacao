@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import base64
 from django.core.files.base import ContentFile
+from rest_framework import viewsets
 
 from .models import *
 from .forms import *
-import base64
+from .serializers import *
 
 def home(request):
     """ Homepage com a lista de todas as Atividade (:model:`auxilioavalicao.Assignment`) criadas
@@ -75,9 +77,12 @@ def field(request, assignment_id, field_id):
 
     assignment = get_object_or_404(Assignment, pk=assignment_id)
     field = get_object_or_404(Field, pk=field_id)
+    # TODO: Pegar respostas desse campo
+    answers = field.answers.all() #Answer.objects.all().filter(field=field)
     context = {
         'assignment': assignment,
-        'field': field
+        'field': field,
+        'answers': answers
     }
     return render(request, 'auxilioavaliacao/field.html', context)
 
@@ -112,3 +117,21 @@ def submission(request, assignment_id, submission_id):
         'submission': submission
     }
     return render(request, 'auxilioavaliacao/submission.html', context)
+
+# REST API
+
+class AssignmentViewSet(viewsets.ModelViewSet):
+    queryset = Assignment.objects.all()
+    serializer_class = AssignmentSerializer
+
+class FieldViewSet(viewsets.ModelViewSet):
+    queryset = Field.objects.all()
+    serializer_class = FieldSerializer
+
+class SubmissionViewSet(viewsets.ModelViewSet):
+    queryset = Submission.objects.all()
+    serializer_class = SubmissionSerializer
+
+class AnswerViewSet(viewsets.ModelViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswersSerializer

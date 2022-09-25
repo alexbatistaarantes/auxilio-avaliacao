@@ -22,11 +22,14 @@ class Assignment(models.Model):
     width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem template")
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem template")
 
+    def __str__(self):
+        return self.title
+
 class Field(models.Model):
     """ Guarda um Campo que está presente em uma Atividade (:model:`auxilioavalicao.Assignment`)
     """
 
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, help_text="A atividade de qual o campo faz parte")
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='fields', help_text="A atividade de qual o campo faz parte")
     label = models.CharField(max_length=50, null=False, blank=False, help_text="O nome do campo")
     image = models.ImageField(upload_to='fields', width_field='width', height_field='height', null=True, blank=True, help_text="A imagem do campo")
     width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem do campo")
@@ -59,11 +62,14 @@ class Field(models.Model):
         
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.assignment.title} - {self.label}"
+
 class Submission(models.Model):
     """ Guarda uma entrega de uma Atividade (:model:`auxilioavalicao.Assignment`) de um aluno
     """
 
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, help_text="A atividade da qual a entrega faz parte")
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='submissions', help_text="A atividade da qual a entrega faz parte")
     studentId = models.CharField(max_length=255, null=False, blank=False, help_text="Um identificador único do aluno dessa entrega")
     image = models.ImageField(
         upload_to='submissions',
@@ -105,15 +111,15 @@ class Submission(models.Model):
 
         super().save(*args, **kwargs)
 
-    def save_answer(self, field):
-        pass
+    def __str__(self):
+        return f"{self.assignment} - {self.studentId}"
 
 class Answer(models.Model):
     """ Guarda a imagem da resposta de uma Entrega (:model:`auxilioavalicao.Submission`)
     """
 
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, help_text="A entrega da qual essa resposta faz parte")
-    field = models.ForeignKey(Field, on_delete=models.CASCADE, help_text="O campo desta resposta")
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name='answers', help_text="A entrega da qual essa resposta faz parte")
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='answers', help_text="O campo desta resposta")
     image = models.ImageField(
         upload_to='submissionFields',
         null=True, blank=True,
@@ -138,3 +144,7 @@ class Answer(models.Model):
         self.image = crop_image(self.submission.image, (self.x1, self.y1, self.x2, self.y2))
 
         super().save(*args, **kwargs)
+
+
+    def __str__(self):
+        return f"{self.submission} - {self.field}"

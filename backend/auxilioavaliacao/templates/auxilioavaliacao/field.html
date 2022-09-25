@@ -5,15 +5,21 @@
     <a href="{% url 'auxilioavaliacao:assignment' assignment.id %}">{{ assignment.title }}</a>
 
     <h2>{{ field.label }}</h2>
-    {{ field.x1 }}
-    {{ field.y1 }}
-    {{ field.x2 }}
-    {{ field.y2 }}
+    <img src="{{ field.image.url }}" alt="{{ region.label }}">
 
-    {{ field.pctX1 }}
-    {{ field.pctY1 }}
-    {{ field.pctX2 }}
-    {{ field.pctY2 }}
-    <!-- <img src="{{ field.file.url }}" alt="{{ region.label }}"> -->
+    <div id="answers">
+        <h3> Respostas dos alunos </h3>
+        <ul>
+            {% for answer in answers %}
+                <a href="{% url 'auxilioavaliacao:submission' assignment.id answer.submission.id %}">
+                    <li>
+                        <h4>{{ answer.submission.studentId }}</h4>
+                        <img src="{{ answer.image.url }}" alt="Resposta do aluno">
+                    </li>
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
+
 </div>
 {% endblock %}

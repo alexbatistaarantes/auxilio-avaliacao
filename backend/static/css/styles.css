@@ -1,3 +1,7 @@
+img {
+    border: 2px solid black;
+}
+
 /* ==================== */
 /* Home */
 
@@ -26,20 +30,26 @@ div#home div#assignments > ul > li {
 /* Assignment */
 
 div#assignment img {
-    max-width: 500px;
+    max-width: 300px;
     height: auto;
-
-    border: 2px solid black;
 }
+
+div#assignment > img#assignment_template {
+    max-width: 500px;
+}
+
+/* ================== */
+/* Field */
+
+
+
 
 /* ================== */
 /* Submission */
 
 div#submission img {
-    max-width: 500px;
+    max-width: 300px;
     height: auto;
-
-    border: 2px solid black;
 }
 
 /* ================== */

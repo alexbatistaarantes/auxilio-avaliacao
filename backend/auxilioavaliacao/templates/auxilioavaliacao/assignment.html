@@ -4,7 +4,8 @@
 
 {% block content %}
 <div id="assignment">
-    <img src="{{ assignment.template_image.url }}" alt="Template da atividade">
+    <h1>{{ assignment.title }}</h1>
+    <img id="assignment_template" src="{{ assignment.template_image.url }}" alt="Template da atividade">
 
     <div id="fields">
         <h2> Campos </h2>
@@ -14,7 +15,7 @@
         </a>
         
         <ul>
-            {% for field in assignment.field_set.all %}
+            {% for field in assignment.fields.all %}
                 <a href="{% url 'auxilioavaliacao:field' assignment.id field.id %}">
                     <li>
                         <h3> {{ field.label }} </h3>
@@ -34,7 +35,7 @@
         </a>
 
         <ul>
-            {% for submission in assignment.submission_set.all %}
+            {% for submission in assignment.submissions.all %}
                 <a href="{% url 'auxilioavaliacao:submission' assignment.id submission.id %}">
                     <li>
                         <h3> {{ submission.studentId }} </h3>

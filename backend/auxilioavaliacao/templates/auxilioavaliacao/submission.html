@@ -8,11 +8,14 @@
     <img src="{{ submission.image.url }}" alt="Imagem da entrega">
 
     <ul id="answers">
-        {% for answer in submission.answer_set.all %}
-            <li>
-                <h3>{{ answer.field.label }}</h3>
-                <img src="{{ answer.image.url }}" alt="Imagem da resposta">
-            </li>
+        <h3> Respostas </h3>
+        {% for answer in submission.answers.all %}
+            <a href="{% url 'auxilioavaliacao:field' assignment.id answer.field.id %}">
+                <li>
+                    <h4>{{ answer.field.label }}</h4>
+                    <img src="{{ answer.image.url }}" alt="Imagem da resposta">
+                </li>
+            </a>
         {% endfor %}
     </ul>
     
