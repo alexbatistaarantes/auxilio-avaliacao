@@ -1,0 +1,20 @@
+{% extends 'auxilioavaliacao/layout.html' %}
+
+{% load static %}
+
+{% block title %} Novo campo {% endblock %}
+
+{% block content %}
+<div id="new_submission">
+    <a href="{% url 'auxilioavaliacao:assignment' assignment.id %}">{{ assignment.title }}</a>
+
+    <h2> Adicionar nova entrega </h2>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {{ form }}
+
+        <input id="submit" value="Adicionar atividade" type="submit">
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'auxilioavaliacao/layout.html' %}
+
+{% block content %}
+<div id="submission">
+    <a href="{% url 'auxilioavaliacao:assignment' assignment.id %}">{{ assignment.title }}</a>
+
+    <h2>{{ submission.studentId }}</h2>
+    <img src="{{ submission.image.url }}" alt="Imagem da entrega">
+
+    <ul id="answers">
+        <h3> Respostas </h3>
+        {% for answer in submission.answers.all %}
+            <a href="{% url 'auxilioavaliacao:field' assignment.id answer.field.id %}">
+                <li>
+                    <h4>{{ answer.field.label }}</h4>
+                    <img src="{{ answer.image.url }}" alt="Imagem da resposta">
+                </li>
+            </a>
+        {% endfor %}
+    </ul>
+    
+</div>
+{% endblock %}

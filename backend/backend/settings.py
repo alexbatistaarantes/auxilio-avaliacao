@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'auxilioavaliacao.apps.AuxilioavaliacaoConfig'
+    'rest_framework',
+    'corsheaders',
+
+    'auxilioavaliacao.apps.AuxilioavaliacaoConfig',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -130,3 +135,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = 'media/'
 MEDIA_URL = 'image/'
+
+REST_FRAMEWORK = {
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+}
+
+CORS_ALLOW_ALL_ORIGINS = True

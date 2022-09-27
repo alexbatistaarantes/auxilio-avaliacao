@@ -1,0 +1,47 @@
+{% extends 'auxilioavaliacao/layout.html' %}
+
+{% load static %}
+{% block style_imports %}
+    <!-- Importando o style do Croppie -->
+    <link rel="stylesheet" href="{% static 'css/croppie.css' %}">
+{% endblock %}
+
+{% block header_scripts %}
+    <!-- Salvando URL da imagem, para ser usado pelo Croppie -->
+    <script> const imageUrl = "{{ assignment.template_image.url }}"; </script>
+    <!-- Importando o script do Croppie -->
+    <script src="{% static 'js/croppie.js' %}"></script>
+{% endblock %}
+
+{% block title %} Novo campo {% endblock %}
+
+{% block content %}
+<div id="new_field">
+    <a href="{% url 'auxilioavaliacao:assignment' assignment.id %}">{{ assignment.title }}</a>
+
+    <h2> Criar novo campo </h2>
+    
+    <form action="" method="POST">
+        {% csrf_token %}
+        
+        {{ form.label }}
+        <!-- Coordenadas -->
+        {{ form.x1.as_hidden }}
+        {{ form.y1.as_hidden }}
+        {{ form.x2.as_hidden }}
+        {{ form.y2.as_hidden }}
+
+        <!-- Imagem recortada em base64 -->
+        <!-- <input id="image_base64" type="hidden" name="image_base64"> -->
+
+        <input id="submit" value="Criar campo" type="submit">
+    </form>
+
+    <div id="selection-tool"></div>
+</div>
+{% endblock %}
+
+{% block body_scripts %}
+    <!-- Script que inicializa o Croppie -->
+    <script src="{% static 'js/segment.js' %}"></script>
+{% endblock %}

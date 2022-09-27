@@ -1,32 +1,55 @@
+img {
+    border: 2px solid black;
+}
+
 /* ==================== */
 /* Home */
 
-div#home img.image-preview {
+div#home img.assignment-preview {
     height: 17rem;
     width: auto;
+
+    border-top: 2px solid black;
 }
 
-div#home div#images > ul {
+div#home div#assignments > ul {
     display: flex;
     
     list-style: none;
 }
 
-div#home div#images > ul > li {
+div#home div#assignments > ul > li {
     flex: 0 1 auto;
     margin: 1.2rem 1.2rem;
 
+    text-align: center;
     border: 2px solid black;
 }
 
 /* ================== */
-/* Image */
+/* Assignment */
 
-div#image img {
-    max-width: 500px;
+div#assignment img {
+    max-width: 300px;
     height: auto;
+}
 
-    border: 2px solid black;
+div#assignment > img#assignment_template {
+    max-width: 500px;
+}
+
+/* ================== */
+/* Field */
+
+
+
+
+/* ================== */
+/* Submission */
+
+div#submission img {
+    max-width: 300px;
+    height: auto;
 }
 
 /* ================== */

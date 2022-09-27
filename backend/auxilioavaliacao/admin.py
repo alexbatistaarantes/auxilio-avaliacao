@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import Image, Region
+from .models import *
 
-admin.site.register(Image)
-admin.site.register(Region)
+# Adicionando modelos para edição no site admin
+admin.site.register(Assignment)
+admin.site.register(Field)
+admin.site.register(Submission)
+admin.site.register(Answer)

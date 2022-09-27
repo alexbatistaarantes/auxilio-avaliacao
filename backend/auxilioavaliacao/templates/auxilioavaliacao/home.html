@@ -10,22 +10,23 @@
 
 {% block content %}
 <div id="home">
-    <div id="images">
-        <h2> Imagens </h2>
+    <div id="assignments">
+        <h2> Atividades </h2>
 
-        <a href="{% url 'auxilioavaliacao:newimage' %}">
-            <button> Nova imagem </button>
+        <a href="{% url 'auxilioavaliacao:newassignment' %}">
+            <button> Nova atividade </button>
         </a>
 
         <ul>
-            {% for image in images %}
+            {% for assignment in assignments %}
                 <li>
-                    <a href="{% url 'auxilioavaliacao:image' image.id %}">
-                        <img class="image-preview" src="{{ image.file.url }}" alt="">
+                    <a href="{% url 'auxilioavaliacao:assignment' assignment.id %}">
+                        <h3>{{ assignment.title }}</h3>
+                        <img class="assignment-preview" src="{{ assignment.template_image.url }}" alt="Imagem do template da atividade">
                     </a>
                 </li>
             {% empty %}
-                <p> Nenhuma imagem </p>
+                <p> Nenhuma atividade </p>
             {% endfor %}
         </ul>
     </div>
