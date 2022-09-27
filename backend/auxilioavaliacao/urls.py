@@ -8,7 +8,7 @@ router = routers.DefaultRouter()
 router.register(r'assignments', views.AssignmentViewSet, basename='assignment')
 router.register(r'fields', views.FieldViewSet, basename='field')
 router.register(r'submissions', views.SubmissionViewSet, basename='submission')
-router.register(r'answers', views.SubmissionViewSet, basename='answer')
+router.register(r'answers', views.AnswerViewSet, basename='answer')
 
 app_name = 'auxilioavaliacao'
 urlpatterns = [
