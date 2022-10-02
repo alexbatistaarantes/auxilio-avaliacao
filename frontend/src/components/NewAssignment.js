@@ -1,22 +1,38 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { getCookie } from "../utils/cookie";
 
 const NewAssignment = ({ onNewAssignmentCreated }) => {
 
     const [title, setTitle] = useState("");
     const [templateImage, setTemplateImage] = useState("");
 
+    const titleInput = useRef(null);
+    const templateImageInput = useRef(null);
+
+    const clearState = () => {
+        setTitle("");
+        setTemplateImage("");
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const assignment = {title, templateImage};
-        
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('template_image', templateImage);
+
+        const csrftoken = getCookie('csrftoken');
+
         fetch('http://127.0.0.1:8000/api/assignments/', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(assignment)
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
         }).then(() => {
-            setTitle("");
-            setTemplateImage("");
+            clearState();
+            event.target.reset();
             onNewAssignmentCreated();
         });
     }
@@ -30,9 +46,10 @@ const NewAssignment = ({ onNewAssignmentCreated }) => {
                 <div>
                     <label htmlFor="title"> Título </label>
                     <input name="title" id="title"
-                        value={title}
+                        ref={titleInput}
                         onChange={(event) => setTitle(event.target.value)}
                         type="text"
+                        required
                     />
                 </div>
                 <br />
@@ -40,9 +57,10 @@ const NewAssignment = ({ onNewAssignmentCreated }) => {
                 <div>
                     <label htmlFor="template-image"> Folha de resposta da Atividade </label>
                     <input name="template-image" id="template-image"
-                        value={templateImage}
-                        onChange={(event) => setTemplateImage(event.target.value)}
+                        ref={templateImageInput}
+                        onChange={(event) => setTemplateImage(event.target.files[0])}
                         type="file"
+                        required
                     />
                 </div>
                 <br />
