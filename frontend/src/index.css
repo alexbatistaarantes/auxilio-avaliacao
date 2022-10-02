@@ -1,0 +1,32 @@
+div.assignment-list > ul {
+  display: flex;
+
+  list-style: none;
+}
+
+div.assignment-list > ul > li {
+  flex: 1 1 auto;
+  max-width: 300px;
+}
+
+div.assignment-preview {
+  border: 2px solid black;
+}
+
+div.assignment-preview > img {
+  width: 100%;
+  height: auto;
+
+  border-top: 2px solid black;
+}
+
+div.assignment > img {
+  width: 30%;
+  height: auto;
+
+  border: 2px solid black;
+}
+
+div#edit-answer {
+  display: flex;
+}

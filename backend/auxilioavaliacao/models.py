@@ -34,8 +34,6 @@ class Field(models.Model):
     image = models.ImageField(upload_to='fields', width_field='width', height_field='height', null=True, blank=True, help_text="A imagem do campo")
     width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem do campo")
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem do campo")
-    # MELHORAR: salvar apenas o percentual
-    # Usar Annotorious (https://recogito.github.io/annotorious/) que tem como salvar o percentual
     x1 = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
     y1 = models.IntegerField(null=False, blank=False, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
     x2 = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto direito inferior em referência a imagem da entrega")
