@@ -6,6 +6,7 @@ from . import views
 # REST API
 router = routers.DefaultRouter()
 router.register(r'assignments', views.AssignmentViewSet, basename='assignment')
+router.register(r'assignments/(?P<assignment_id>\d*)/fields', views.AssignmentFields, basename='assignment-fields')
 router.register(r'fields', views.FieldViewSet, basename='field')
 router.register(r'submissions', views.SubmissionViewSet, basename='submission')
 router.register(r'answers', views.AnswerViewSet, basename='answer')

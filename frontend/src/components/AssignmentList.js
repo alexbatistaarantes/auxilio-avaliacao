@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const AssignmentList = ({ title, assignments }) => {
-    
+
     return (
         <div className="assignment-list">
             <h2>{ title }</h2>
