@@ -11,7 +11,7 @@ class FieldForm(ModelForm):
 
     class Meta:
         model = Field
-        fields = ['label', 'x1', 'y1', 'x2', 'y2']
+        fields = ['label', 'x', 'y', 'width', 'height']
 
 class SubmissionForm(ModelForm):
     class Meta:

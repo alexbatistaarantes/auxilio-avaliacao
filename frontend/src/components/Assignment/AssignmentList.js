@@ -12,7 +12,7 @@ const AssignmentList = ({ title, assignments }) => {
                     <Link to={`assignment/${assignment.id}`}>
                         <div className="assignment-preview">
                             <h3>{ assignment.title }</h3>
-                            <img src={ assignment.template_image } alt="" />
+                            <img class="document" src={ assignment.template_image } alt="Folha de resposta" />
                         </div>
                     </Link>
                 </li>

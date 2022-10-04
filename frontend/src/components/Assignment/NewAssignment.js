@@ -1,14 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
-import { getCookie } from "../utils/cookie";
+import { getCookie } from "../../utils/cookie";
 
 const NewAssignment = ({ onNewAssignmentCreated }) => {
 
     const [title, setTitle] = useState("");
     const [templateImage, setTemplateImage] = useState("");
-
-    const titleInput = useRef(null);
-    const templateImageInput = useRef(null);
 
     const clearState = () => {
         setTitle("");
@@ -46,7 +43,6 @@ const NewAssignment = ({ onNewAssignmentCreated }) => {
                 <div>
                     <label htmlFor="title"> Título </label>
                     <input name="title" id="title"
-                        ref={titleInput}
                         onChange={(event) => setTitle(event.target.value)}
                         type="text"
                         required
@@ -57,7 +53,6 @@ const NewAssignment = ({ onNewAssignmentCreated }) => {
                 <div>
                     <label htmlFor="template-image"> Folha de resposta da Atividade </label>
                     <input name="template-image" id="template-image"
-                        ref={templateImageInput}
                         onChange={(event) => setTemplateImage(event.target.files[0])}
                         type="file"
                         required

@@ -18,7 +18,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = ['studentId', 'image', 'answers']
+        fields = '__all__'
 
 class AnswersSerializer(serializers.ModelSerializer):
     submission_image = serializers.ImageField(source='submission.image')

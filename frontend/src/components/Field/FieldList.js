@@ -6,8 +6,8 @@ const FieldList = ({ fields }) => {
             {fields.map((field) => (
                 <li key={ field.id } >
                     <div className="field-preview">
-                        <h3>{ field.label }</h3>
-                        <img src={ field.image } alt="" />
+                        <h4>{ field.label }</h4>
+                        <img className="document-crop" src={ field.image } alt="" />
                     </div>
                 </li>
             ))}

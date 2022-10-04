@@ -1,7 +1,7 @@
 import { Link, BrowserRouter, Routes, Route } from "react-router-dom";
 
 import './App.css';
-import Assignment from "./components/Assignment";
+import Assignment from "./components/Assignment/Assignment";
 
 import Home from './components/Home';
 

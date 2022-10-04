@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import AssignmentList from "./AssignmentList";
-import NewAssignment from "./NewAssignment";
+import AssignmentList from "./Assignment/AssignmentList";
+import NewAssignment from "./Assignment/NewAssignment";
 
 const Home = () => {
 

@@ -1,3 +1,9 @@
+img.document {
+  border: 2px solid black;
+}
+
+/* ============== */
+/* HOME */
 div.assignment-list > ul {
   display: flex;
 
@@ -9,22 +15,51 @@ div.assignment-list > ul > li {
   max-width: 300px;
 }
 
-div.assignment-preview {
-  border: 2px solid black;
-}
-
 div.assignment-preview > img {
   width: 100%;
   height: auto;
-
-  border-top: 2px solid black;
 }
 
-div.assignment > img {
-  width: 30%;
+/* =================== */
+/* ASSIGNMENT */
+div.assignment img#template-image {
+  width: 40%;
+  height: auto;
+}
+
+div.assignment > div {
+  width: 40%;
+  margin: 10px;
+  padding: 10px;
+}
+
+div.assignment-fields {
+  border: 2px solid black;
+}
+
+div.assignment-fields img.document-crop {
+  max-width: 100%;
   height: auto;
 
   border: 2px solid black;
+}
+
+div.selection-tool > div {
+  width: 90%;
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  border: 2px solid black;
+}
+
+div.assignment div.assignment-submissions {
+  border: 2px solid black;
+}
+
+div.assignment div.submission-list  img.document{
+  max-width: 90%;
+  height: auto;
 }
 
 div#edit-answer {

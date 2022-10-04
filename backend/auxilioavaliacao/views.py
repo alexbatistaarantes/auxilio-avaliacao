@@ -131,6 +131,14 @@ class AssignmentFields(viewsets.ModelViewSet):
         assignment_id = self.kwargs['assignment_id']
         return Field.objects.filter(assignment__id=assignment_id)
 
+class AssignmentSubmissions(viewsets.ModelViewSet):
+    serializer_class = SubmissionSerializer
+
+    def get_queryset(self):
+        assignment_id = self.kwargs['assignment_id']
+        assignment = get_object_or_404(Assignment, pk=assignment_id)
+        return Submission.objects.filter(assignment=assignment)
+
 class FieldViewSet(viewsets.ModelViewSet):
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
