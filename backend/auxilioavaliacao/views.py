@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import base64
 from django.core.files.base import ContentFile
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 
 from .models import *
 from .forms import *
@@ -124,6 +124,20 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
 
+class AssignmentFields(viewsets.ModelViewSet):
+    serializer_class = FieldSerializer
+
+    def get_queryset(self):
+        assignment_id = self.kwargs['assignment_id']
+        return Field.objects.filter(assignment__id=assignment_id)
+
+class AssignmentSubmissions(viewsets.ModelViewSet):
+    serializer_class = SubmissionSerializer
+
+    def get_queryset(self):
+        assignment_id = self.kwargs['assignment_id']
+        return Submission.objects.filter(assignment__id=assignment_id)
+
 class FieldViewSet(viewsets.ModelViewSet):
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
@@ -131,6 +145,13 @@ class FieldViewSet(viewsets.ModelViewSet):
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
+
+class SubmissionAnswersSet(viewsets.ModelViewSet):
+    serializer_class = AnswersSerializer
+
+    def get_queryset(self):
+        submission_id = self.kwargs['submission_id']
+        return Answer.objects.filter(submission__id=submission_id)
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()

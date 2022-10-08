@@ -1,3 +1,4 @@
+from email.policy import default
 from tkinter import CASCADE
 from django.db import models
 
@@ -31,34 +32,21 @@ class Field(models.Model):
 
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='fields', help_text="A atividade de qual o campo faz parte")
     label = models.CharField(max_length=50, null=False, blank=False, help_text="O nome do campo")
-    image = models.ImageField(upload_to='fields', width_field='width', height_field='height', null=True, blank=True, help_text="A imagem do campo")
+    image = models.ImageField(upload_to='fields', null=True, blank=True, help_text="A imagem do campo")
+    x = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
+    y = models.IntegerField(null=False, blank=False, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
     width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem do campo")
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem do campo")
-    # MELHORAR: salvar apenas o percentual
-    # Usar Annotorious (https://recogito.github.io/annotorious/) que tem como salvar o percentual
-    x1 = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
-    y1 = models.IntegerField(null=False, blank=False, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
-    x2 = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto direito inferior em referência a imagem da entrega")
-    y2 = models.IntegerField(null=False, blank=False, help_text="A coordenada Y do ponto direito inferior em referência a imagem da entrega")
-    pctX1 = models.FloatField(null=True, blank=True, help_text="O percentual do ponto esquerdo superior em relação a largura da imagem template")
-    pctY1 = models.FloatField(null=True, blank=True, help_text="O percentual do ponto esquerdo superior em relação a altura da imagem template")
-    pctX2 = models.FloatField(null=True, blank=True, help_text="O percentual do ponto direito inferior em relação a largura da imagem template")
-    pctY2 = models.FloatField(null=True, blank=True, help_text="O percentual do ponto direito inferior em relação a altura da imagem template")
 
     def save(self, *args, **kwargs):
         """ Obtém imagem do campo e os percentuais dos pontos
         """
 
         # Obtendo imagem do campo a partir da imagem template
-        self.image = crop_image(self.assignment.template_image, (self.x1, self.y1, self.x2, self.y2))
-        
-        # Obtendo percentuais
-        template_width = self.assignment.width
-        template_height = self.assignment.height
-        self.pctX1 = self.x1 / template_width
-        self.pctY1 = self.y1 / template_height
-        self.pctX2 = self.x2 / template_width
-        self.pctY2 = self.y2 / template_height
+        self.image = crop_image(
+            self.assignment.template_image,
+            (self.x, self.y, self.x + self.width, self.y + self.height)
+        )
         
         super().save(*args, **kwargs)
 
@@ -92,24 +80,24 @@ class Submission(models.Model):
 
         super().save(*args, **kwargs)
 
-        fields = self.assignment.field_set.all()
+        assignment_width = self.assignment.width
+        assignment_height = self.assignment.height
+        fields = self.assignment.fields.all()
         for field in fields:
-            x1 = int(self.width * field.pctX1)
-            y1 = int(self.height * field.pctY1)
-            x2 = int(self.width * field.pctX2)
-            y2 = int(self.height * field.pctY2)
+            x = int((field.x / assignment_width) * self.width)
+            y = int((field.y / assignment_height) * self.height)
+            width = int((field.width / assignment_width) * self.width)
+            height = int((field.height / assignment_height) * self.height)
 
             answer = Answer(
                 submission=self,
                 field=field,
-                x1=x1,
-                y1=y1,
-                x2=x2,
-                y2=y2
+                x=x,
+                y=y,
+                width=width,
+                height=height
             )
             answer.save()
-
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.assignment} - {self.studentId}"
@@ -125,10 +113,11 @@ class Answer(models.Model):
         null=True, blank=True,
         help_text="A imagem da resposta"
     )
-    x1 = models.IntegerField(null=True, blank=True, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
-    y1 = models.IntegerField(null=True, blank=True, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
-    x2 = models.IntegerField(null=True, blank=True, help_text="A coordenada X do ponto direito inferior em referência a imagem da entrega")
-    y2 = models.IntegerField(null=True, blank=True, help_text="A coordenada Y do ponto direito inferior em referência a imagem da entrega")
+    x = models.IntegerField(null=True, blank=True, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
+    y = models.IntegerField(null=True, blank=True, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
+    width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem da resposta")
+    height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem da resposta")
+    modified = models.BooleanField(default=False, help_text="Se a região da resposta foi alterada da padrão")
 
     class Meta:
         constraints = [
@@ -141,7 +130,10 @@ class Answer(models.Model):
 
         # Obtendo imagem do campo a partir da imagem template
         self.submission.image.open()
-        self.image = crop_image(self.submission.image, (self.x1, self.y1, self.x2, self.y2))
+        self.image = crop_image(
+            self.submission.image,
+            (self.x, self.y, self.x + self.width, self.y + self.height)
+        )
 
         super().save(*args, **kwargs)
 

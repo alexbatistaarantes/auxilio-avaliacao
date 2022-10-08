@@ -1,0 +1,61 @@
+img.document-image {
+  border: 2px solid black;
+}
+
+img#main-document {
+  width: 40%;
+  height: auto;
+}
+
+div.document-list > ul {
+  display: flex;
+
+  list-style: none;
+}
+
+div.document-list > ul > li {
+  flex: 1 1 auto;
+  max-width: 300px;
+}
+
+div.document-preview > img {
+  width: 100%;
+  height: auto;
+}
+
+img.region-image {
+  max-width: 100%;
+  height: auto;
+
+  border: 2px dashed black;
+}
+
+/* =================== */
+/* ASSIGNMENT */
+
+div.assignment > div {
+  width: 40%; 
+  margin: 10px;
+  padding: 10px;
+}
+
+div.assignment-fields {
+  border: 2px solid black;
+}
+
+div.selection-tool > div {
+  width: 90%;
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  border: 2px solid black;
+}
+
+div.assignment div.assignment-submissions {
+  border: 2px solid black;
+}
+
+div#edit-answer {
+  display: flex;
+}
