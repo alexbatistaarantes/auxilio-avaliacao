@@ -4,6 +4,7 @@ import './App.css';
 import Assignment from "./components/Assignment/Assignment";
 
 import Home from './components/Home';
+import Submission from "./components/Submission/Submission";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='assignment/:id' element={<Assignment />} />
+            <Route path='assignment/:assignment_id/submission/:submission_id' element={<Submission />} />
           </Routes>
         </BrowserRouter>
       </div>

@@ -68,7 +68,7 @@ const Assignment = () => {
             <h2>{ assignment.title }</h2>
             <button onClick={() => deleteAssignment()}> Excluir Atividde </button>
             <br />
-            <img id="template-image" className="document" src={assignment.template_image} alt="Folha de respostas" />
+            <img id="main-document" className="document-image" src={assignment.template_image} alt="Folha de respostas" />
 
             <div className="assignment-fields">
                 <h3> Campos </h3>

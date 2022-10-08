@@ -22,6 +22,8 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
 class AnswersSerializer(serializers.ModelSerializer):
     submission_image = serializers.ImageField(source='submission.image')
+    submission_width = serializers.FloatField(source='submission.width')
+    submission_height = serializers.FloatField(source='submission.height')
     field_label = serializers.CharField(source='field.label')
 
     class Meta:

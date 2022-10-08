@@ -1,46 +1,45 @@
-img.document {
+img.document-image {
   border: 2px solid black;
 }
 
-/* ============== */
-/* HOME */
-div.assignment-list > ul {
+img#main-document {
+  width: 40%;
+  height: auto;
+}
+
+div.document-list > ul {
   display: flex;
 
   list-style: none;
 }
 
-div.assignment-list > ul > li {
+div.document-list > ul > li {
   flex: 1 1 auto;
   max-width: 300px;
 }
 
-div.assignment-preview > img {
+div.document-preview > img {
   width: 100%;
   height: auto;
 }
 
-/* =================== */
-/* ASSIGNMENT */
-div.assignment img#template-image {
-  width: 40%;
+img.region-image {
+  max-width: 100%;
   height: auto;
+
+  border: 2px dashed black;
 }
 
+/* =================== */
+/* ASSIGNMENT */
+
 div.assignment > div {
-  width: 40%;
+  width: 40%; 
   margin: 10px;
   padding: 10px;
 }
 
 div.assignment-fields {
-  border: 2px solid black;
-}
-
-div.assignment-fields img.document-crop {
-  max-width: 100%;
-  height: auto;
-
   border: 2px solid black;
 }
 
@@ -55,11 +54,6 @@ div.selection-tool > div {
 
 div.assignment div.assignment-submissions {
   border: 2px solid black;
-}
-
-div.assignment div.submission-list  img.document{
-  max-width: 90%;
-  height: auto;
 }
 
 div#edit-answer {

@@ -1,3 +1,4 @@
+from email.policy import default
 from tkinter import CASCADE
 from django.db import models
 
@@ -98,8 +99,6 @@ class Submission(models.Model):
             )
             answer.save()
 
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.assignment} - {self.studentId}"
 
@@ -118,6 +117,7 @@ class Answer(models.Model):
     y = models.IntegerField(null=True, blank=True, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
     width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem da resposta")
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem da resposta")
+    modified = models.BooleanField(default=False, help_text="Se a região da resposta foi alterada da padrão")
 
     class Meta:
         constraints = [
