@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import AnswerList from "../Answer/AnswerList";
 
@@ -35,8 +36,7 @@ const Submission = () => {
 
     return (submission && (
         <div className="submission">
-
-            <a href="../"> Voltar para atividade </a>
+            <Link to={`/assignment/${submission.assignment}`}> Voltar para atividade </Link>
 
             <h2>{ submission.studentId }</h2>
             <br />

@@ -3,8 +3,9 @@ import { useState } from "react";
 import { getCookie } from "../../utils/cookie";
 import SelectionTool from "../SelectionTool";
 
-const Answer = ({answer, allowEdition=true, onAnswerModified}) => {
+const Answer = ({answer, allowModification=true, onAnswerModified}) => {
 
+    const [ toggleModification, setToggleModification ] = useState(false);
     const [ cropRegion, setCropRegion ] = useState({
         unit: '%',
         x: (answer.x / answer.submission_width) * 100,
@@ -36,6 +37,7 @@ const Answer = ({answer, allowEdition=true, onAnswerModified}) => {
             body: JSON.stringify(body)
         }).then(() => {
             onAnswerModified();
+            setToggleModification(false);
         });
     }
 
@@ -43,16 +45,23 @@ const Answer = ({answer, allowEdition=true, onAnswerModified}) => {
         <div className="answer">
             <h2> { answer.field_label } </h2>
             <img className="region-image" src={ answer.image } alt="" />
-
-            {allowEdition && (
-                <div>
-                    <button onClick={() => saveModification()}> Salvar edição </button>
-                    <SelectionTool
-                        src={answer.submission_image}
-                        crop={cropRegion}
-                        onCropChange={(c) => setCropRegion(c)}
-                    />
-                </div>
+            
+            {allowModification && (
+            <button onClick={() => setToggleModification(!toggleModification)}>
+                {!toggleModification && ("Editar")}
+                {toggleModification && ("Cancelar edição")}
+            </button>
+            )}
+            
+            {allowModification && toggleModification && (
+            <div>
+                <button onClick={() => saveModification()}> Salvar edição </button>
+                <SelectionTool
+                    src={answer.submission_image}
+                    crop={cropRegion}
+                    onCropChange={(c) => setCropRegion(c)}
+                />
+            </div>
             )}
         </div>
     );

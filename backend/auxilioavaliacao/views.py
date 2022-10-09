@@ -124,14 +124,14 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
 
-class AssignmentFields(viewsets.ModelViewSet):
+class AssignmentFieldsViewSet(viewsets.ModelViewSet):
     serializer_class = FieldSerializer
 
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_id']
         return Field.objects.filter(assignment__id=assignment_id)
 
-class AssignmentSubmissions(viewsets.ModelViewSet):
+class AssignmentSubmissionsViewSet(viewsets.ModelViewSet):
     serializer_class = SubmissionSerializer
 
     def get_queryset(self):
@@ -142,11 +142,18 @@ class FieldViewSet(viewsets.ModelViewSet):
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
 
+class FieldAnswersViewSet(viewsets.ModelViewSet):
+    serializer_class = AnswersSerializer
+
+    def get_queryset(self):
+        field_id = self.kwargs['field_id']
+        return Answer.objects.filter(field__id=field_id)
+
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
 
-class SubmissionAnswersSet(viewsets.ModelViewSet):
+class SubmissionAnswersViewSet(viewsets.ModelViewSet):
     serializer_class = AnswersSerializer
 
     def get_queryset(self):

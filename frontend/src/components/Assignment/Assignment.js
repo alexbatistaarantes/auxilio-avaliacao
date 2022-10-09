@@ -72,7 +72,7 @@ const Assignment = () => {
 
             <div className="assignment-fields">
                 <h3> Campos </h3>
-                <NewField assignment={assignment} onNewFieldCreated={() => getFields()} />
+                {submissions.length === 0 && (<NewField assignment={assignment} onNewFieldCreated={() => getFields()} />)}
                 <FieldList fields={fields} />
             </div>
 

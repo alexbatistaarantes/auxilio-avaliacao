@@ -22,7 +22,9 @@ const Home = () => {
 
     return (
         <div id="home">
+            <hr />
             <NewAssignment onNewAssignmentCreated={() => getAssignments()} />
+            <hr />
             <AssignmentList title="Todas as atividades" assignments={assignments} />
         </div>
     );
