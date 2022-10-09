@@ -3,7 +3,7 @@ import { useState } from "react";
 import { getCookie } from "../../utils/cookie";
 import SelectionTool from "../SelectionTool";
 
-const Answer = ({answer, allowModification=true, onAnswerModified}) => {
+const Answer = ({answer, answerTitle='field', allowModification=true, onAnswerModified, }) => {
 
     const [ toggleModification, setToggleModification ] = useState(false);
     const [ cropRegion, setCropRegion ] = useState({
@@ -43,7 +43,10 @@ const Answer = ({answer, allowModification=true, onAnswerModified}) => {
 
     return (
         <div className="answer">
-            <h2> { answer.field_label } </h2>
+            <h2>
+                { answerTitle === 'field' && answer.field_label }
+                { answerTitle === 'student' && answer.studentId }
+            </h2>
             <img className="region-image" src={ answer.image } alt="" />
             
             {allowModification && (

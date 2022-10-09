@@ -2,14 +2,14 @@ import SelectionTool from '../SelectionTool';
 
 import Answer from './Answer';
 
-const AnswerList = ({answers, selectAnswer, allowModification=true, onAnswerModified}) => {
+const AnswerList = ({answers, groupedBy, allowModification=true, onAnswerModified}) => {
 
     return (
         <div className="answers region-list">
             <ul>
             {answers.map((answer) => (
                 <li key={ answer.id }>
-                    <Answer answer={answer} allowModification={allowModification} onAnswerModified={() => onAnswerModified()}/>
+                    <Answer answer={answer} answerTitle={groupedBy} allowModification={allowModification} onAnswerModified={() => onAnswerModified()}/>
                 </li>
             ))}
             </ul>

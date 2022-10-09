@@ -3,12 +3,14 @@ img.document-image {
 }
 
 img#main-document {
-  width: 40%;
-  height: auto;
+  width: auto;
+  max-height: 100%;
+  box-sizing: border-box;
 }
 
 div.document-list > ul {
   display: flex;
+  flex-wrap: wrap;
 
   list-style: none;
 }
@@ -33,6 +35,39 @@ img.region-image {
 /* =================== */
 /* ASSIGNMENT */
 
+div.assignment {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+div.assignment > div {
+  flex: 1 1 auto;
+  max-width: 40%;
+  height: 75vh;
+  margin: 10px;
+  padding: 10px;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  border: 1px solid black;
+}
+
+@media (max-width: 1600px) {
+  div.assignment > div {
+    max-width: 80%;
+  }
+}
+
+div.new-field div.selection-tool {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  border: 1px solid black;
+}
+
+/*
 div.assignment > div {
   width: 40%; 
   margin: 10px;
@@ -48,14 +83,38 @@ div.selection-tool > div {
   height: 300px;
   overflow-y: scroll;
   overflow-x: hidden;
-
+  
   border: 2px solid black;
 }
 
 div.assignment div.assignment-submissions {
   border: 2px solid black;
 }
+*/
 
-div#edit-answer {
+/* =================== */
+/* ASSIGNMENT */
+
+div.submission {
   display: flex;
+  flex-wrap: wrap;
+}
+
+div.submission > div {
+  flex: 1 1 auto;
+  max-width: 40%;
+  height: 75vh;
+  margin: 10px;
+  padding: 10px;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  border: 1px solid black;
+}
+
+@media (max-width: 1600px) {
+  div.submission > div {
+    max-width: 80%;
+  }
 }

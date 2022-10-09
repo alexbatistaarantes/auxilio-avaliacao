@@ -10,12 +10,10 @@ import Submission from "./components/Submission/Submission";
 function App() {
   return (
     <div id="app">
-      <h1> Auxílio Avaliação </h1>
-
       <div id="content">
         <BrowserRouter>
           <nav>
-            <Link to='/'> Home </Link>
+            <Link to='/'> <h1> Auxílio Avaliação </h1> </Link>
           </nav>
           <Routes>
             <Route path='/' element={<Home />} />

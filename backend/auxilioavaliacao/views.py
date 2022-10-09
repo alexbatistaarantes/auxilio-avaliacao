@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-import base64
 from django.core.files.base import ContentFile
+import base64
 from rest_framework import viewsets, generics
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .models import *
 from .forms import *
@@ -152,6 +154,18 @@ class FieldAnswersViewSet(viewsets.ModelViewSet):
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
+
+    def create(self, request, *args, **kwargs):
+        """ Salva multiplas entregas e obtém studentId a partir do nome do arquivo
+        """
+
+        assignment_id = request.POST['assignment']
+        assignment = Assignment.objects.get(pk=assignment_id)
+        images = request.FILES.getlist('images')
+        for image in images:
+            submission = Submission(assignment=assignment, image=image)
+            submission.save()
+        return Response({'status': 200})
 
 class SubmissionAnswersViewSet(viewsets.ModelViewSet):
     serializer_class = AnswersSerializer

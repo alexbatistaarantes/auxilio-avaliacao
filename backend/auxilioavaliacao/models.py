@@ -2,7 +2,7 @@ from email.policy import default
 from tkinter import CASCADE
 from django.db import models
 
-from .utils import crop_image
+from .utils import crop_image, split_filename_and_extension
 
 def image_directory_path(instance, filename):
     return f"images/{filename}"
@@ -24,7 +24,7 @@ class Assignment(models.Model):
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem template")
 
     def __str__(self):
-        return self.title
+        return f"({self.id}) {self.title}"
 
 class Field(models.Model):
     """ Guarda um Campo que está presente em uma Atividade (:model:`auxilioavalicao.Assignment`)
@@ -39,7 +39,7 @@ class Field(models.Model):
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem do campo")
 
     def save(self, *args, **kwargs):
-        """ Obtém imagem do campo e os percentuais dos pontos
+        """ Criando imagem do campo
         """
 
         # Obtendo imagem do campo a partir da imagem template
@@ -75,28 +75,44 @@ class Submission(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        """ Automaticamente obtém as respostas (:model:`auxilioavaliacao.Answer`) a partir dos campos (:model:`auxilioavaliacao.Field`) da atividade (:model:`auxilioavaliacao.Assignment`)
-        """
-
+        
+        # studentId é definido a partir do nome do arquivo
+        self.studentId, _ = split_filename_and_extension(self.image.name)
         super().save(*args, **kwargs)
 
-        assignment_width = self.assignment.width
-        assignment_height = self.assignment.height
+        self.createAnswer()
+
+    def createAnswer(self):
+        """ Cria as respostas (:model:`auxilioavaliacao.Answer`)
+        """
+
         fields = self.assignment.fields.all()
         for field in fields:
-            x = int((field.x / assignment_width) * self.width)
-            y = int((field.y / assignment_height) * self.height)
-            width = int((field.width / assignment_width) * self.width)
-            height = int((field.height / assignment_height) * self.height)
+            x_percent = field.x / self.assignment.width
+            y_percent = field.y / self.assignment.height
+            width_percent = field.width / self.assignment.width
+            height_percent = field.height / self.assignment.height
+            x = int(x_percent * self.width)
+            y = int(y_percent * self.height)
+            width = int(width_percent * self.width)
+            height = int(height_percent * self.height)
 
-            answer = Answer(
-                submission=self,
-                field=field,
-                x=x,
-                y=y,
-                width=width,
-                height=height
-            )
+            # Se resposta para o campo já existir
+            try:
+                answer = Answer.objects.get(submission=self, field=field)
+                answer.x = x
+                answer.y = y
+                answer.width = width
+                answer.height = height
+            except:
+                answer = Answer(
+                    submission=self,
+                    field=field,
+                    x=x,
+                    y=y,
+                    width=width,
+                    height=height
+                )
             answer.save()
 
     def __str__(self):

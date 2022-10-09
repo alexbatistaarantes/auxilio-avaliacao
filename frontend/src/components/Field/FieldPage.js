@@ -33,7 +33,7 @@ const FieldPage = () => {
             <h2>{ field.label }</h2>
             <img className="region-image" src={field.image} alt="Imagem do campo" />
 
-            {answers && (<AnswerList answers={answers} onAnswerModified={() => getAnswers()} />)}
+            {answers && (<AnswerList answers={answers} groupedBy='student' onAnswerModified={() => getAnswers()} />)}
         </div>
     ));
 }

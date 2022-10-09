@@ -9,6 +9,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FieldSerializer(serializers.ModelSerializer):
+    assignment_image = serializers.ImageField(source='assignment.template_image')
 
     class Meta:
         model = Field
@@ -25,6 +26,7 @@ class AnswersSerializer(serializers.ModelSerializer):
     submission_width = serializers.FloatField(source='submission.width')
     submission_height = serializers.FloatField(source='submission.height')
     field_label = serializers.CharField(source='field.label')
+    studentId = serializers.CharField(source='submission.studentId')
 
     class Meta:
         model = Answer
