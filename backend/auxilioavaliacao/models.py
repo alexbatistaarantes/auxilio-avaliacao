@@ -118,6 +118,15 @@ class Submission(models.Model):
     def __str__(self):
         return f"{self.assignment} - {self.studentId}"
 
+class AnswerGroup(models.Model):
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='groups', help_text="O campo das respostas agrupadas neste grupo")
+    name = models.CharField(max_length=30, default='', null=False, blank=False, help_text="Um curto descritor do agrupamento (por exemplo, o conteúdo das respostas)")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint('field', 'name', name='unique_group_name_per_field')
+        ]
+
 class Answer(models.Model):
     """ Guarda a imagem da resposta de uma Entrega (:model:`auxilioavalicao.Submission`)
     """
@@ -134,6 +143,7 @@ class Answer(models.Model):
     width = models.IntegerField(null=True, blank=True, help_text="A largura da imagem da resposta")
     height = models.IntegerField(null=True, blank=True, help_text="A altura da imagem da resposta")
     modified = models.BooleanField(default=False, help_text="Se a região da resposta foi alterada da padrão")
+    group = models.ForeignKey(AnswerGroup, on_delete=models.SET_NULL, related_name='answers', null=True, blank=True, help_text="O grupo que esta resposta faz parte")
 
     class Meta:
         constraints = [

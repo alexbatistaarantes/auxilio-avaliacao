@@ -1,5 +1,13 @@
+ul {
+  list-style: none;
+}
+
+/* =================== */
+/* DOCUMENTS */
+
 img.document-image {
-  border: 2px solid black;
+  /*border: 2px solid black;*/
+  box-shadow: 2px 2px 5px black;
 }
 
 img#main-document {
@@ -17,12 +25,21 @@ div.document-list > ul {
 
 div.document-list > ul > li {
   flex: 1 1 auto;
+  margin: 10px;
   max-width: 300px;
 }
 
 div.document-preview > img {
   width: 100%;
   height: auto;
+}
+
+/* ==================== */
+/* REGIONS */
+
+div.region-list > ul > li {
+  margin: 10px;
+  max-width: 100%;
 }
 
 img.region-image {
@@ -93,7 +110,7 @@ div.assignment div.assignment-submissions {
 */
 
 /* =================== */
-/* ASSIGNMENT */
+/* SUBMISSIONS */
 
 div.submission {
   display: flex;
@@ -117,4 +134,29 @@ div.submission > div {
   div.submission > div {
     max-width: 80%;
   }
+}
+
+/* =================== */
+/* FIELDS */
+
+div.field-page {
+  display: flex;
+}
+
+div.field-page > div {
+  flex: 1 1 auto;
+  max-width: 40%;
+  margin: 10px;
+  padding: 10px;
+
+  border: 1px solid black;
+}
+
+div.field-page > div.answer-groups {
+  flex: 2 2 auto;
+}
+
+div.answer {
+  padding: 10px;
+  box-shadow: 2px 2px 5px black;
 }

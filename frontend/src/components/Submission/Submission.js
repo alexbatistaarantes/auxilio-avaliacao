@@ -54,17 +54,17 @@ const Submission = () => {
 
     return (submission && (
         <div className="submission">
-            <Link to={`/assignment/${submission.assignment}`}> Voltar para atividade </Link>
-            <br />
-
             <div className="submission-infos">
-                <h2>{ submission.studentId }</h2>
+                <h2>
+                    <Link to={`/assignment/${submission.assignment}`}>{ submission.assignment_title }</Link>
+                </h2>
+                <h2> Aluno: { submission.studentId }</h2>
                 <button onClick={() => deleteSubmission()}> Excluir entrega </button>
                 <br />
                 <img id="main-document" className="document-image" src={submission.image} alt="Folha de respostas" />
             </div>
 
-            <AnswerList answers={answers} onAnswerModified={() => getAnswers()}/>
+            <AnswerList answers={answers} answerTitle="label" onAnswerModified={() => getAnswers()}/>
         </div>
     ));
 }

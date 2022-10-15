@@ -123,10 +123,16 @@ def submission(request, assignment_id, submission_id):
 # REST API
 
 class AssignmentViewSet(viewsets.ModelViewSet):
+    """ Atividades
+    """
+
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
 
 class AssignmentFieldsViewSet(viewsets.ModelViewSet):
+    """ Campos de uma Atividade
+    """
+
     serializer_class = FieldSerializer
 
     def get_queryset(self):
@@ -134,6 +140,9 @@ class AssignmentFieldsViewSet(viewsets.ModelViewSet):
         return Field.objects.filter(assignment__id=assignment_id)
 
 class AssignmentSubmissionsViewSet(viewsets.ModelViewSet):
+    """ Entregas de uma Atividade
+    """
+
     serializer_class = SubmissionSerializer
 
     def get_queryset(self):
@@ -141,17 +150,37 @@ class AssignmentSubmissionsViewSet(viewsets.ModelViewSet):
         return Submission.objects.filter(assignment__id=assignment_id)
 
 class FieldViewSet(viewsets.ModelViewSet):
+    """ Campos
+    """
+
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
 
 class FieldAnswersViewSet(viewsets.ModelViewSet):
+    """ Respostas de um Campo
+    """
+
     serializer_class = AnswersSerializer
 
     def get_queryset(self):
         field_id = self.kwargs['field_id']
         return Answer.objects.filter(field__id=field_id)
 
+class FieldAnswerGroupsViewSet(viewsets.ModelViewSet):
+    """ Grupos de um Campo
+    """
+
+    serializer_class = AnswerGroupSerializer
+
+    def get_queryset(self):
+        field_id = self.kwargs['field_id']
+        field = get_object_or_404(Field, pk=field_id)
+        return AnswerGroup.objects.filter(field=field)
+
 class SubmissionViewSet(viewsets.ModelViewSet):
+    """ Entregas
+    """
+
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
 
@@ -168,6 +197,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return Response({'status': 200})
 
 class SubmissionAnswersViewSet(viewsets.ModelViewSet):
+    """ Respostas de uma Entrega
+    """
+
     serializer_class = AnswersSerializer
 
     def get_queryset(self):
@@ -175,5 +207,31 @@ class SubmissionAnswersViewSet(viewsets.ModelViewSet):
         return Answer.objects.filter(submission__id=submission_id)
 
 class AnswerViewSet(viewsets.ModelViewSet):
+    """ Resposta
+    """
+
     queryset = Answer.objects.all()
     serializer_class = AnswersSerializer
+
+class AnswerGroupViewSet(viewsets.ModelViewSet):
+    queryset = AnswerGroup.objects.all()
+    serializer_class = AnswerGroupSerializer
+
+@api_view(['PATCH'])
+def update_answers_group(request):
+    """ Altera o grupo de múltiplas Respostas
+    """
+
+    group_id = request.data['group']
+    answers_id = request.data['answers']
+
+    if group_id is not None:
+        group = get_object_or_404(AnswerGroup, pk=group_id)
+    else:
+        group = None
+    answers = Answer.objects.filter(id__in=answers_id)
+
+    for answer in answers:
+        answer.group = group
+        answer.save(update_fields=['group'])
+    return Response(AnswerGroupSerializer(group).data)
