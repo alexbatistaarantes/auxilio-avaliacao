@@ -5,6 +5,7 @@ import { getCookie } from "../../utils/cookie";
 import FieldList from "../Field/FieldList";
 import NewField from "../Field/NewField";
 import NewSubmission from "../Submission/NewSubmission";
+import NewSubmissions from "../Submission/NewSubmissions";
 import SubmissionList from "../Submission/SubmissionList";
 
 const Assignment = () => {
@@ -51,34 +52,38 @@ const Assignment = () => {
 
     const deleteAssignment = () => {
 
-        const csrftoken = getCookie('csrftoken');
+        if(window.confirm("Você tem certeza que deseja apagar a atividade?")){
+            const csrftoken = getCookie('csrftoken');
 
-        fetch(`http://127.0.0.1:8000/api/assignments/${id}/`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken': csrftoken
-            }
-        }).then(() => {
-            navigate('/');
-        });
+            fetch(`http://127.0.0.1:8000/api/assignments/${id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            }).then(() => {
+                navigate('/');
+            });
+        }
     }
 
     return (assignment && (
         <div className="assignment">
-            <h2>{ assignment.title }</h2>
-            <button onClick={() => deleteAssignment()}> Excluir Atividde </button>
-            <br />
-            <img id="main-document" className="document-image" src={assignment.template_image} alt="Folha de respostas" />
+            <div className="assignment-infos">
+                <h2>{ assignment.title }</h2>
+                <button onClick={deleteAssignment}> Excluir Atividde </button>
+                <br />
+                <img id="main-document" className="document-image" src={assignment.template_image} alt="Folha de respostas" />
+            </div>
 
             <div className="assignment-fields">
                 <h3> Campos </h3>
-                <NewField assignment={assignment} onNewFieldCreated={() => getFields()} />
+                {submissions.length === 0 && (<NewField assignment={assignment} onNewFieldCreated={() => getFields()} />)}
                 <FieldList fields={fields} />
             </div>
 
             <div className="assignment-submissions">
                 <h3> Entregas </h3>
-                <NewSubmission assignment={assignment} onNewSubmissionCreated={getSubmissions} />
+                <NewSubmissions assignment={assignment} onNewSubmissionCreated={getSubmissions} />
                 <SubmissionList submissions={submissions} />
             </div>
         </div>

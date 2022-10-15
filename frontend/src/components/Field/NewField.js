@@ -70,13 +70,11 @@ const NewField = ({ assignment, onNewFieldCreated }) => {
                 <input type="submit" value="Criar campo" />
                 <br />
 
-                <div>
-                    <SelectionTool
-                        crop={crop}
-                        src={assignment.template_image}
-                        onCropChange={(newCrop) => setCrop(newCrop)}
-                    />
-                </div>
+                <SelectionTool
+                    crop={crop}
+                    src={assignment.template_image}
+                    onCropChange={(newCrop) => setCrop(newCrop)}
+                />
             </form>
         </div>
     );

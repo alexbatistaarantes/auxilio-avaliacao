@@ -1,12 +1,13 @@
+from email.mime import base
 from PIL import Image
-from os.path import splitext
+from os.path import basename, splitext
 from io import BytesIO
 from django.core.files import File
 
 def crop_image(image, box):
     img = Image.open(image)
     # Obtendo a extensão
-    extension = splitext(image.name)[-1][1:]
+    _, extension = split_filename_and_extension(image.name)
     # Corta a imagem
     cropped = img.crop(box)
     # Salvando em um BytesIO
@@ -16,3 +17,7 @@ def crop_image(image, box):
     cropped_file = File(cropped_IO, name=image.name)
     
     return cropped_file
+
+def split_filename_and_extension(filepath):
+    splitted = splitext(basename(filepath))
+    return splitted[0], splitted[-1][1:]

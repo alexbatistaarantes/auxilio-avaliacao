@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-import base64
 from django.core.files.base import ContentFile
+import base64
 from rest_framework import viewsets, generics
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .models import *
 from .forms import *
@@ -121,17 +123,26 @@ def submission(request, assignment_id, submission_id):
 # REST API
 
 class AssignmentViewSet(viewsets.ModelViewSet):
+    """ Atividades
+    """
+
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
 
-class AssignmentFields(viewsets.ModelViewSet):
+class AssignmentFieldsViewSet(viewsets.ModelViewSet):
+    """ Campos de uma Atividade
+    """
+
     serializer_class = FieldSerializer
 
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_id']
         return Field.objects.filter(assignment__id=assignment_id)
 
-class AssignmentSubmissions(viewsets.ModelViewSet):
+class AssignmentSubmissionsViewSet(viewsets.ModelViewSet):
+    """ Entregas de uma Atividade
+    """
+
     serializer_class = SubmissionSerializer
 
     def get_queryset(self):
@@ -139,14 +150,56 @@ class AssignmentSubmissions(viewsets.ModelViewSet):
         return Submission.objects.filter(assignment__id=assignment_id)
 
 class FieldViewSet(viewsets.ModelViewSet):
+    """ Campos
+    """
+
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
 
+class FieldAnswersViewSet(viewsets.ModelViewSet):
+    """ Respostas de um Campo
+    """
+
+    serializer_class = AnswersSerializer
+
+    def get_queryset(self):
+        field_id = self.kwargs['field_id']
+        return Answer.objects.filter(field__id=field_id)
+
+class FieldAnswerGroupsViewSet(viewsets.ModelViewSet):
+    """ Grupos de um Campo
+    """
+
+    serializer_class = AnswerGroupSerializer
+
+    def get_queryset(self):
+        field_id = self.kwargs['field_id']
+        field = get_object_or_404(Field, pk=field_id)
+        return AnswerGroup.objects.filter(field=field)
+
 class SubmissionViewSet(viewsets.ModelViewSet):
+    """ Entregas
+    """
+
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
 
-class SubmissionAnswersSet(viewsets.ModelViewSet):
+    def create(self, request, *args, **kwargs):
+        """ Salva multiplas entregas e obtém studentId a partir do nome do arquivo
+        """
+
+        assignment_id = request.POST['assignment']
+        assignment = Assignment.objects.get(pk=assignment_id)
+        images = request.FILES.getlist('images')
+        for image in images:
+            submission = Submission(assignment=assignment, image=image)
+            submission.save()
+        return Response({'status': 200})
+
+class SubmissionAnswersViewSet(viewsets.ModelViewSet):
+    """ Respostas de uma Entrega
+    """
+
     serializer_class = AnswersSerializer
 
     def get_queryset(self):
@@ -154,5 +207,31 @@ class SubmissionAnswersSet(viewsets.ModelViewSet):
         return Answer.objects.filter(submission__id=submission_id)
 
 class AnswerViewSet(viewsets.ModelViewSet):
+    """ Resposta
+    """
+
     queryset = Answer.objects.all()
     serializer_class = AnswersSerializer
+
+class AnswerGroupViewSet(viewsets.ModelViewSet):
+    queryset = AnswerGroup.objects.all()
+    serializer_class = AnswerGroupSerializer
+
+@api_view(['PATCH'])
+def update_answers_group(request):
+    """ Altera o grupo de múltiplas Respostas
+    """
+
+    group_id = request.data['group']
+    answers_id = request.data['answers']
+
+    if group_id is not None:
+        group = get_object_or_404(AnswerGroup, pk=group_id)
+    else:
+        group = None
+    answers = Answer.objects.filter(id__in=answers_id)
+
+    for answer in answers:
+        answer.group = group
+        answer.save(update_fields=['group'])
+    return Response(AnswerGroupSerializer(group).data)
