@@ -185,7 +185,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     serializer_class = SubmissionSerializer
 
     def create(self, request, *args, **kwargs):
-        """ Salva multiplas entregas e obtém studentId a partir do nome do arquivo
+        """ Salva multiplas entregas
         """
 
         assignment_id = request.POST['assignment']
@@ -193,6 +193,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         images = request.FILES.getlist('images')
         for image in images:
             submission = Submission(assignment=assignment, image=image)
+            submission.full_clean()
             submission.save()
         return Response({'status': 200})
 
@@ -233,5 +234,6 @@ def update_answers_group(request):
 
     for answer in answers:
         answer.group = group
+        answer.full_clean()
         answer.save(update_fields=['group'])
     return Response(AnswerGroupSerializer(group).data)
