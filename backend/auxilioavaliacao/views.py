@@ -1,127 +1,14 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.core.files.base import ContentFile
-import base64
-from rest_framework import viewsets, generics
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import *
-from .forms import *
 from .serializers import *
-
-def home(request):
-    """ Homepage com a lista de todas as Atividade (:model:`auxilioavalicao.Assignment`) criadas
-    """
-
-    assignments = Assignment.objects.all()
-    context = { 'assignments': assignments }
-    return render(request, 'auxilioavaliacao/home.html', context)
-
-def new_assignment(request):
-    """ Formulário para inserir nova atividade (:model:`auxilioavalicao.Assignment`)
-    """
-
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST, request.FILES)
-        if form.is_valid():
-            assignment = form.save()
-            return HttpResponseRedirect(reverse('auxilioavaliacao:assignment', args=[assignment.id]))
-    else:
-        form = AssignmentForm()
-
-    context = {'form': form}
-    return render(request, 'auxilioavaliacao/new_assignment.html', context)
-
-def assignment(request, assignment_id):
-    """ Mostra a atividade (:model:`auxilioavaliacao.Assignment`), seus campos (:model:`auxilioavaliacao.Field`), e entregas (:model:`auxilioavaliacao.Submission`)
-    """
-
-    assignment = get_object_or_404(Assignment, pk=assignment_id)
-    context = {
-        'assignment': assignment
-    }
-    return render(request, 'auxilioavaliacao/assignment.html', context)
-
-def new_field(request, assignment_id):
-    """ Ferramenta de seleção de uma nova região que representa um campo (:model:`auxilioavaliacao.Field`) de uma atividade (:model:`auxilioavaliacao.Assignment`)
-    """
-    
-    assignment = get_object_or_404(Assignment, pk=assignment_id)
-    if request.method == "POST":
-        form = FieldForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            field = Field(**data, assignment=assignment)
-            field.save()
-
-            # Salva a imagem da região a partir do campo da imagem em base64, feita pelo Croppie
-            # format, file_base64 = request.POST['image_base64'].split(';base64,')
-            # extension = format.split('/')[-1]
-            # file = ContentFile(base64.b64decode(file_base64))
-            # filename = f"{field.id}.{extension}"
-            # field.file.save(filename, file, save=True)
-
-            return HttpResponseRedirect(reverse('auxilioavaliacao:assignment', args=[assignment.id]))
-    else:
-        form = FieldForm()
-
-    context = {
-        'assignment': assignment,
-        'form': form
-    }
-    return render(request, 'auxilioavaliacao/new_field.html', context)
-
-def field(request, assignment_id, field_id):
-    """ Página do campo (:model:`auxilioavaliacao.Field`)
-    """
-
-    assignment = get_object_or_404(Assignment, pk=assignment_id)
-    field = get_object_or_404(Field, pk=field_id)
-    # TODO: Pegar respostas desse campo
-    answers = field.answers.all() #Answer.objects.all().filter(field=field)
-    context = {
-        'assignment': assignment,
-        'field': field,
-        'answers': answers
-    }
-    return render(request, 'auxilioavaliacao/field.html', context)
-
-def new_submission(request, assignment_id):
-    """ Página para adicionar apenas uma nova Entrega (:model:`auxilioavaliacao.Submission`)
-    """
-
-    assignment = get_object_or_404(Assignment, pk=assignment_id)
-    if request.method == 'POST':
-        form = SubmissionForm(request.POST, request.FILES)
-        if form.is_valid():
-            data = form.cleaned_data
-            submission = Submission(**data, assignment=assignment)
-            submission.save()
-
-            return HttpResponseRedirect(reverse('auxilioavaliacao:assignment', args=[assignment.id]))
-    else:
-        form = SubmissionForm()
-
-    context = {
-        'form': form,
-        'assignment': assignment
-    }
-    return render(request, 'auxilioavaliacao/new_submission.html', context)
-
-def submission(request, assignment_id, submission_id):
-
-    assignment = get_object_or_404(Assignment, pk=assignment_id)
-    submission = get_object_or_404(Submission, pk=submission_id)
-    context = {
-        'assignment': assignment,
-        'submission': submission
-    }
-    return render(request, 'auxilioavaliacao/submission.html', context)
 
 # REST API
 
+# ASSIGNMENT #
 class AssignmentViewSet(viewsets.ModelViewSet):
     """ Atividades
     """
@@ -129,6 +16,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
 
+# ASSIGNMENT FIELDS #
 class AssignmentFieldsViewSet(viewsets.ModelViewSet):
     """ Campos de uma Atividade
     """
@@ -139,6 +27,7 @@ class AssignmentFieldsViewSet(viewsets.ModelViewSet):
         assignment_id = self.kwargs['assignment_id']
         return Field.objects.filter(assignment__id=assignment_id)
 
+# ASSIGNMENT SUBMISSIONS #
 class AssignmentSubmissionsViewSet(viewsets.ModelViewSet):
     """ Entregas de uma Atividade
     """
@@ -149,6 +38,7 @@ class AssignmentSubmissionsViewSet(viewsets.ModelViewSet):
         assignment_id = self.kwargs['assignment_id']
         return Submission.objects.filter(assignment__id=assignment_id)
 
+# FIELD #
 class FieldViewSet(viewsets.ModelViewSet):
     """ Campos
     """
@@ -156,6 +46,7 @@ class FieldViewSet(viewsets.ModelViewSet):
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
 
+# FIELD ANSWERS #
 class FieldAnswersViewSet(viewsets.ModelViewSet):
     """ Respostas de um Campo
     """
@@ -166,6 +57,7 @@ class FieldAnswersViewSet(viewsets.ModelViewSet):
         field_id = self.kwargs['field_id']
         return Answer.objects.filter(field__id=field_id)
 
+# FIELD ANSWER GROUPS #
 class FieldAnswerGroupsViewSet(viewsets.ModelViewSet):
     """ Grupos de um Campo
     """
@@ -177,6 +69,7 @@ class FieldAnswerGroupsViewSet(viewsets.ModelViewSet):
         field = get_object_or_404(Field, pk=field_id)
         return AnswerGroup.objects.filter(field=field)
 
+# SUBMISSION #
 class SubmissionViewSet(viewsets.ModelViewSet):
     """ Entregas
     """
@@ -197,6 +90,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             submission.save()
         return Response({'status': 200})
 
+# SUBMISSION ANSWERS #
 class SubmissionAnswersViewSet(viewsets.ModelViewSet):
     """ Respostas de uma Entrega
     """
@@ -207,6 +101,7 @@ class SubmissionAnswersViewSet(viewsets.ModelViewSet):
         submission_id = self.kwargs['submission_id']
         return Answer.objects.filter(submission__id=submission_id)
 
+# ANSWER #
 class AnswerViewSet(viewsets.ModelViewSet):
     """ Resposta
     """
@@ -214,10 +109,12 @@ class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswersSerializer
 
+# ANSWER GROUP #
 class AnswerGroupViewSet(viewsets.ModelViewSet):
     queryset = AnswerGroup.objects.all()
     serializer_class = AnswerGroupSerializer
 
+# UPDATE ANSWERS IN A ANSWER GROUP #
 @api_view(['PATCH'])
 def update_answers_group(request):
     """ Altera o grupo de múltiplas Respostas
