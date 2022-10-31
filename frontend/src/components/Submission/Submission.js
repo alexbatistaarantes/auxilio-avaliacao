@@ -59,6 +59,7 @@ const Submission = () => {
                     <Link to={`/assignment/${submission.assignment}`}>{ submission.assignment_title }</Link>
                 </h2>
                 <h2> Aluno: { submission.studentId }</h2>
+                <p> Nota: {submission.total_points} / {submission.assignment_total_points} </p>
                 <button onClick={() => deleteSubmission()}> Excluir entrega </button>
                 <br />
                 <img id="main-document" className="document-image" src={submission.image} alt="Folha de respostas" />

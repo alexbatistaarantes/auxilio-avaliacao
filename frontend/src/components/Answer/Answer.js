@@ -54,8 +54,32 @@ const Answer = ({
         });
     }
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const points = event.target.points.value;
+        const feedback = event.target.feedback.value;
+
+        const csrfToken = getCookie('csrfToken');
+
+        fetch(`http://127.0.0.1:8000/api/answers/${answer.id}/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                points: points,
+                feedback: feedback
+            })
+        }).then(() => {
+            onAnswerModified();
+        })
+    }
+
     return (
         <div className="answer">
+            {/* Caixa de Seleção */}
             {allowSelection && 
             <input
                 checked={checked}
@@ -67,15 +91,35 @@ const Answer = ({
                 type="checkbox" 
             />
             }
+
+            {/* Título da resposta (nenhum, label do campo ou identificador do aluno) */}
             { answerTitle !== null &&
             <h2>
-                { answerTitle === 'field' && answer.field_label }
+                { answerTitle === 'label' && answer.field_label }
                 { answerTitle === 'studentId' && answer.studentId }
             </h2>
             }
+
+            {/* Imagem da resposta */}
             { showImage && <img className="region-image" src={ answer.image } alt="" />}
-            <p className="answer-group">{ answer.group_name }</p>
             
+            {/*  */}
+            <form onSubmit={(event) => handleSubmit(event)}>
+                <input name="points" id="points"
+                    defaultValue={answer.points}
+                    min={0} max={answer.field_points}
+                    placeholder="Nota" type="number"
+                    disabled={answer.group_name && true}
+                /> / {answer.field_points}
+                <textarea name="feedback" id="feedback"
+                    defaultValue={answer.feedback}
+                    placeholder="Comentário" cols="30" rows="1"
+                    disabled={answer.group_name && true}
+                ></textarea>
+                
+                {!answer.group_name && <input type="submit" value="Salvar nota" />}
+            </form>
+
             {allowModification &&
             <div>
                 <button onClick={() => setToggleModification(!toggleModification)}>

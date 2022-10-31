@@ -1,10 +1,10 @@
 import { Link, BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Assignment from "./components/Assignment/Assignment";
-import FieldPage from "./components/Field/FieldPage";
-
 import Home from './components/Home';
+import Assignment from "./components/Assignment/Assignment";
 import Submission from "./components/Submission/Submission";
+import FieldPage from "./components/Field/FieldPage";
+import AnswerGroupPage from "./components/AnswerGroup/AnswerGroupPage";
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
             <Route path='assignment/:id' element={<Assignment />} />
             <Route path='assignment/:assignment_id/submission/:submission_id' element={<Submission />} />
             <Route path='assignment/:assignment_id/field/:field_id' element={<FieldPage />} />
+            <Route path='assignment/:assignment_id/group/:group_id' element={<AnswerGroupPage />} />
           </Routes>
         </BrowserRouter>
       </div>

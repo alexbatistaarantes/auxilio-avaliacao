@@ -8,7 +8,7 @@ const AnswerGroupList = ({ groups }) => {
         <ul>
         {groups.map(group => (
             <li key={group.id}>
-                <AnswerGroup answerGroup={group} />
+                <AnswerGroup answerGroup={group} onGroupModified={() => {}} />
             </li>
         ))}
         </ul>

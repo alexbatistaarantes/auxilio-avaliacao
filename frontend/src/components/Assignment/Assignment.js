@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
 import FieldList from "../Field/FieldList";
 import NewField from "../Field/NewField";
-import NewSubmission from "../Submission/NewSubmission";
 import NewSubmissions from "../Submission/NewSubmissions";
 import SubmissionList from "../Submission/SubmissionList";
 
@@ -70,6 +69,9 @@ const Assignment = () => {
         <div className="assignment">
             <div className="assignment-infos">
                 <h2>{ assignment.title }</h2>
+                <p> Valor da atividade: { assignment.total_points} </p>
+                <a href={`http://127.0.0.1:8000/api/get_assignment_grading/${assignment.id}`}> Baixar correção </a>
+                <br />
                 <button onClick={deleteAssignment}> Excluir Atividde </button>
                 <br />
                 <img id="main-document" className="document-image" src={assignment.template_image} alt="Folha de respostas" />
