@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+
+import Field from "./Field";
 
 const FieldList = ({ fields }) => {
     
@@ -10,14 +11,9 @@ const FieldList = ({ fields }) => {
             <button onClick={() => setShowSubmission(!showSubmission)}> Mostrar </button>
             <ul>
             {fields.map((field) => (
-                <li key={ field.id } >
-                    <Link to={`/assignment/${field.assignment}/field/${field.id}`}>
-                        <div className="field-preview">
-                            <h4>{ field.label }</h4>
-                            { showSubmission && <img className="document-crop region-image" src={ field.assignment_image } alt="" />}
-                        </div>
-                    </Link>
-                </li>
+            <li key={ field.id } >
+                <Field field={field} />
+            </li>
             ))}
             </ul>
         </div>

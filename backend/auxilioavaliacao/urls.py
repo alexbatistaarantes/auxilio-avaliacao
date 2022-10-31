@@ -22,15 +22,8 @@ router.register(r'answers', views.AnswerViewSet, basename='answer')
 
 app_name = 'auxilioavaliacao'
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('new_assignment/', views.new_assignment, name='newassignment'),
-    path('assignment/<int:assignment_id>/', views.assignment, name='assignment'),
-    path('assignment/<int:assignment_id>/field/<int:field_id>/', views.field, name='field'),
-    path('assignment/<int:assignment_id>/new_field/', views.new_field, name='newfield'),
-    path('assignment/<int:assignment_id>/new_submission/', views.new_submission, name='newsubmission'),
-    path('assignment/<int:assignment_id>/submission/<int:submission_id>/', views.submission, name='submission'),
-
     # REST API
     path(r'api/', include(router.urls)),
-    path(r'api/update_group', views.update_answers_group, name='update-answer-group')
+    path(r'api/update_answers_group', views.update_answers_group, name='update-answer-group'),
+    path('api/get_assignment_grading/<int:assignment_id>', views.get_assignment_grading, name='get-assignment-grading')
 ]

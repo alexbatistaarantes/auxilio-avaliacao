@@ -14,17 +14,17 @@ const NewField = ({ assignment, onNewFieldCreated }) => {
         height: 10
     };
 
-    const [label, setLabel] = useState("");
     const [crop, setCrop] = useState(defaultCrop);
 
     const clearState = () => {
-        setLabel("");
         setCrop(defaultCrop);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        const label = event.target.label.value;
+        const points = event.target.points.value;
         const x = parseInt(assignment.width * (crop.x/100))
         const y = parseInt(assignment.height * (crop.y/100))
         const width = parseInt(assignment.width * (crop.width/100))
@@ -41,6 +41,7 @@ const NewField = ({ assignment, onNewFieldCreated }) => {
             body: JSON.stringify({
                 'assignment': assignment.id,
                 'label': label,
+                'points': points,
                 'x': x,
                 'y': y,
                 'width': width,
@@ -60,12 +61,12 @@ const NewField = ({ assignment, onNewFieldCreated }) => {
             <form onSubmit={(event) => handleSubmit(event)}>
                 
                 <div>
-                    <label htmlFor="label"> Legenda </label>
-                    <input name="label" id="label"
-                        onChange={(event) => setLabel(event.target.value)}
+                    <input name="label" id="label" placeholder="Legenda"
                         type="text"
                         required
                     />
+
+                    <input name="points" id="points" placeholder="Points" type="number" />
                 </div>
                 <input type="submit" value="Criar campo" />
                 <br />

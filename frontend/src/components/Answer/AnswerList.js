@@ -18,7 +18,7 @@ const AnswerList = ({
         <div className="answers region-list">
             <ul>
             {answers.map((answer) => (
-                <li key={ answer.id }>
+                <li id={ answer.id } key={ answer.id }>
                     <Answer 
                         answer={answer}
                         answerTitle={answerTitle}

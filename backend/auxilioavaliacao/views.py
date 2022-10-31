@@ -1,7 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import xlwt
 
 from .models import *
 from .serializers import *
@@ -86,9 +88,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         images = request.FILES.getlist('images')
         for image in images:
             submission = Submission(assignment=assignment, image=image)
-            submission.full_clean()
+            submission.clean()
             submission.save()
-        return Response({'status': 200})
+        return Response(SubmissionSerializer(submission).data)
 
 # SUBMISSION ANSWERS #
 class SubmissionAnswersViewSet(viewsets.ModelViewSet):
@@ -132,5 +134,46 @@ def update_answers_group(request):
     for answer in answers:
         answer.group = group
         answer.full_clean()
-        answer.save(update_fields=['group'])
+        answer.save()
     return Response(AnswerGroupSerializer(group).data)
+
+def get_assignment_grading(request, assignment_id):
+
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attatchment; filename="grading.xls"'
+
+    workbook = xlwt.Workbook(encoding='utf-8')
+    
+    # Notas dos alunos
+    points_sheet = workbook.add_sheet('Notas')
+    points_sheet.write(0, 0, 'Aluno')
+    points_sheet.write(0, 1, f"Nota (total {assignment.total_points})")
+    
+    # Correção
+    grading_sheet = workbook.add_sheet('Correção')
+    grading_sheet.write(0, 0, 'Aluno')
+    grading_sheet.write(0, 1, 'Questão')
+    grading_sheet.write(0, 2, 'Valor da Questão')
+    grading_sheet.write(0, 3, 'Pontos')
+    grading_sheet.write(0, 4, 'Comentário')
+
+    points_row = 1
+    grading_row = 1    
+    submissions = Submission.objects.filter(assignment=assignment)
+    for submission in submissions:
+        points_sheet.write(points_row, 0, submission.studentId)
+        points_sheet.write(points_row, 1, submission.total_points)
+        points_row += 1 
+
+        for answer in submission.answers.all():
+            grading_sheet.write(grading_row, 0, submission.studentId)
+            grading_sheet.write(grading_row, 1, answer.field.label)
+            grading_sheet.write(grading_row, 2, answer.field.points)
+            grading_sheet.write(grading_row, 3, answer.points)
+            grading_sheet.write(grading_row, 4, answer.feedback)
+            grading_row += 1
+
+    workbook.save(response)
+    return response

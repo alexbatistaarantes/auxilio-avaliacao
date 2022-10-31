@@ -46,7 +46,7 @@ const FieldPage = () => {
 
         const csrftoken = getCookie('csrftoken');
 
-        fetch(`http://127.0.0.1:8000/api/update_group`, {
+        fetch(`http://127.0.0.1:8000/api/update_answers_group`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,6 +107,7 @@ const FieldPage = () => {
                     onAnswerModified={getAnswers} 
                 />)}
             </div>
+            
             <div>
                 <h2> Grupos </h2>
                 <NewGroup field={field} onNewGroupCreated={getAnswerGroups} />
