@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ submission.studentId }}</title>
+
+    <style>
+        body {
+            width: 210mm;
+        }
+
+        td {
+            padding: 5px;
+            border: 1px solid black;
+        }
+
+        td > img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <table>
+            <thead>
+                <th>Atividade</th>
+                <th>Identificador do Estudante</th>
+                <th>Nota</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ submission.assignment.title }}</td>
+                    <td>{{ submission.studentId }}</td>
+                    <td>{{ submission.total_points }}/{{ submission.assignment.total_points }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="grading">
+        <table>
+            <thead>
+                <th>Questão</th>
+                <th>Resposta</th>
+                <th>Nota</th>
+                <th>Comentário</th>
+            </thead>
+            <tbody>
+                {% for answer in submission.answers.all %}
+                <tr>
+                    <td>{{ answer.field.label }}</td>
+                    <td> <img src="{{ answer.image.url }}" alt="Imagem da resposta da questão {{ answer.field.label }}"> </td>
+                    <td>{{ answer.points }}</td>
+                    <td>{{ answer.feedback }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

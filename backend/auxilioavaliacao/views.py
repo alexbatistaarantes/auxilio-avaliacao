@@ -1,9 +1,11 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import xlwt
+import pdfkit
 
 from .models import *
 from .serializers import *
@@ -137,7 +139,7 @@ def update_answers_group(request):
         answer.save()
     return Response(AnswerGroupSerializer(group).data)
 
-def get_assignment_grading(request, assignment_id):
+def get_assignment_grading_sheet(request, assignment_id):
 
     assignment = get_object_or_404(Assignment, pk=assignment_id)
 
@@ -177,3 +179,17 @@ def get_assignment_grading(request, assignment_id):
 
     workbook.save(response)
     return response
+
+def get_submission_grading_report(request, submission_id):
+
+    submission = Submission.objects.get(pk=submission_id)
+
+    context = {
+        'submission': submission
+    }
+    report_html = render_to_string('auxilioavaliacao/submission_grading_report.html', context=context)
+
+    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+    pdf = pdfkit.from_string(report_html, configuration=config)
+    ## SEPARAR PAGINAS
+    return HttpResponse(pdf, content_type='application/pdf')
