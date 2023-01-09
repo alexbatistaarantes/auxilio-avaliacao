@@ -25,6 +25,6 @@ urlpatterns = [
     # REST API
     path(r'api/', include(router.urls)),
     path(r'api/update_answers_group', views.update_answers_group, name='update-answer-group'),
-    path('api/get_assignment_grading_sheet/<int:assignment_id>', views.get_assignment_grading_sheet, name='get-assignment-grading'),
-    path('api/get_submission_grading_report/<int:submission_id>', views.get_submission_grading_report, name='get-submission-grading-report')
+    path('api/get_assignment_grading_sheet/<int:assignment_id>', views.get_assignment_grading_sheet, name='get-assignment-grading-sheet'),
+    path('api/download_submission_grading/<int:submission_id>', views.download_submission_grading, name='get-submission-grading')
 ]
