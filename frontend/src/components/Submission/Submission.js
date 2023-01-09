@@ -60,6 +60,7 @@ const Submission = () => {
                 </h2>
                 <h2> Aluno: { submission.studentId }</h2>
                 <p> Nota: {submission.total_points} / {submission.assignment_total_points} </p>
+                <a target="_blank" href={`http://127.0.0.1:8000/api/download_submission_grading/${submission.id}`}> Baixar correção </a>
                 <button onClick={() => deleteSubmission()}> Excluir entrega </button>
                 <br />
                 <img id="main-document" className="document-image" src={submission.image} alt="Folha de respostas" />

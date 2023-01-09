@@ -5,10 +5,11 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import xlwt
-import pdfkit
+#import pdfkit
 
 from .models import *
 from .serializers import *
+from .utils import get_submission_grading
 
 # REST API
 
@@ -180,16 +181,15 @@ def get_assignment_grading_sheet(request, assignment_id):
     workbook.save(response)
     return response
 
-def get_submission_grading_report(request, submission_id):
+def download_submission_grading(request, submission_id):
+    """ Baixa PDF com correção de uma submissão
+    """
 
-    submission = Submission.objects.get(pk=submission_id)
+    submission = get_object_or_404(Submission, pk=submission_id)
 
-    context = {
-        'submission': submission
-    }
-    report_html = render_to_string('auxilioavaliacao/submission_grading_report.html', context=context)
+    pdf = get_submission_grading(submission)
 
-    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
-    pdf = pdfkit.from_string(report_html, configuration=config)
-    ## SEPARAR PAGINAS
-    return HttpResponse(pdf, content_type='application/pdf')
+    response = HttpResponse(bytes(pdf), content_type='application/pdf')
+    response['Content-Disposition'] = f"inline; filename=\"{submission.assignment.title}-{submission.studentId}.pdf\""
+
+    return response
