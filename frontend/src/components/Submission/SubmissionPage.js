@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
 import AnswerList from "../Answer/AnswerList";
 
-const Submission = () => {
+const SubmissionPage = () => {
 
     const { submission_id } = useParams();
     const navigate = useNavigate();
@@ -55,9 +55,6 @@ const Submission = () => {
     return (submission && (
         <div className="submission">
             <div className="submission-infos">
-                <h2>
-                    <Link to={`/assignment/${submission.assignment}`}>{ submission.assignment_title }</Link>
-                </h2>
                 <h2> Aluno: { submission.studentId }</h2>
                 <p> Nota: {submission.total_points} / {submission.assignment_total_points} </p>
                 <a target="_blank" href={`http://127.0.0.1:8000/api/download_submission_grading/${submission.id}`}> Baixar correção </a>
@@ -71,4 +68,4 @@ const Submission = () => {
     ));
 }
 
-export default Submission;
+export default SubmissionPage;

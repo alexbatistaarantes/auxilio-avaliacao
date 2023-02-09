@@ -126,13 +126,13 @@ def update_answers_group(request):
     """
 
     group_id = request.data['group']
-    answers_id = request.data['answers']
+    answers_ids = request.data['answers']
 
     if group_id is not None:
         group = get_object_or_404(AnswerGroup, pk=group_id)
     else:
         group = None
-    answers = Answer.objects.filter(id__in=answers_id)
+    answers = Answer.objects.filter(id__in=answers_ids)
 
     for answer in answers:
         answer.group = group

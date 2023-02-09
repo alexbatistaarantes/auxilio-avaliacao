@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 
 import { getCookie } from "../../utils/cookie";
 import FieldList from "../Field/FieldList";
@@ -7,9 +7,10 @@ import NewField from "../Field/NewField";
 import NewSubmissions from "../Submission/NewSubmissions";
 import SubmissionList from "../Submission/SubmissionList";
 
-const Assignment = () => {
+const AssignmentPage = () => {
 
-    const { id } = useParams();
+    //const { id } = useParams();
+    const { assignment_id: id } = useOutletContext();
     const navigate = useNavigate();
     
     const [ assignment, setAssignment ] = useState(null);
@@ -34,21 +35,6 @@ const Assignment = () => {
         });
     }
 
-    useEffect(() => {
-        const getAssignment = () => {
-            fetch(`http://127.0.0.1:8000/api/assignments/${id}/`)
-            .then((response) => {
-                return response.json();
-            }).then((data) => {
-                setAssignment(data);
-            });
-        }
-
-        getAssignment();
-        getFields();
-        getSubmissions();
-    }, [id]);
-
     const deleteAssignment = () => {
 
         if(window.confirm("Você tem certeza que deseja apagar a atividade?")){
@@ -65,10 +51,27 @@ const Assignment = () => {
         }
     }
 
+    useEffect(() => {
+        const getAssignment = () => {
+            fetch(`http://127.0.0.1:8000/api/assignments/${id}/`)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                setAssignment(data);
+            });
+        }
+
+        console.log(id);
+
+        getAssignment();
+        getFields();
+        getSubmissions();
+    }, [id]);
+
     return (assignment && (
         <div className="assignment">
             <div className="assignment-infos">
-                <h2>{ assignment.title }</h2>
+                <p> Título: { assignment.title } </p>
                 <p> Valor da atividade: { assignment.total_points} </p>
                 <a href={`http://127.0.0.1:8000/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar correção </a>
                 <br />
@@ -92,4 +95,4 @@ const Assignment = () => {
     ));
 }
 
-export default Assignment;
+export default AssignmentPage;

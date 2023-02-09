@@ -207,7 +207,7 @@ class Answer(models.Model):
                 self.modified = True
                 self.get_image()
             # Se grupo alterado
-            if previous.group != self.group:
+            if previous.group != self.group and self.group != None:
                 self.points = self.group.points
                 self.feedback = self.group.feedback
         # Se insert
