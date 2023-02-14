@@ -75,14 +75,16 @@ const AssignmentPage = () => {
                 <p> Valor da atividade: { assignment.total_points} </p>
                 <a href={`http://127.0.0.1:8000/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar correção </a>
                 <br />
+
                 <button onClick={deleteAssignment}> Excluir Atividde </button>
                 <br />
+
                 <img id="main-document" className="document-image" src={assignment.template_image} alt="Folha de respostas" />
             </div>
 
             <div className="assignment-fields">
                 <h3> Campos </h3>
-                {submissions.length === 0 && (<NewField assignment={assignment} onNewFieldCreated={() => getFields()} />)}
+                <NewField assignment={assignment} onNewFieldCreated={() => getFields()} />
                 <FieldList fields={fields} />
             </div>
 

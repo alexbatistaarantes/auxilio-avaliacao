@@ -63,7 +63,10 @@ const SubmissionPage = () => {
                 <img id="main-document" className="document-image" src={submission.image} alt="Folha de respostas" />
             </div>
 
-            <AnswerList answers={answers} answerTitle="label" onAnswerModified={() => getAnswers()}/>
+            <div>
+                <h2>Respostas</h2>
+                <AnswerList answers={answers} answerTitle="label" onAnswerModified={() => getAnswers()}/>
+            </div>
         </div>
     ));
 }

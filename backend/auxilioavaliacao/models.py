@@ -50,6 +50,13 @@ class Field(models.Model):
             (self.x, self.y, self.x + self.width, self.y + self.height)
         )
 
+    def save(self, *args, **kwargs):
+        
+        super().save(*args, **kwargs)
+
+        for submission in self.assignment.submissions.all():
+            submission.createAnswers()
+
     def __str__(self):
         return f"{self.assignment.title} - {self.label}"
 
@@ -86,14 +93,14 @@ class Submission(models.Model):
         
         super().save(*args, **kwargs)
 
-        self.createAllAnswers()
+        self.createAnswers()
 
-    def createAllAnswers(self):
+    def createAnswers(self):
         """
         Cria as respostas (:model:`auxilioavaliacao.Answer`) para todos os campos (:model:`auxilioavaliacao.Field`)
         """
 
-        for field in self.assignment.fields.all():
+        for field in self.assignment.fields.exclude(id__in = [answer.field.id for answer in self.answers.all()]):
             self.createAnswer(field)
 
     def createAnswer(self, field):

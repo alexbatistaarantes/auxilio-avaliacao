@@ -177,3 +177,4 @@ yarn-error.log*
 
 # Backend
 backend/media
+backend/reports
