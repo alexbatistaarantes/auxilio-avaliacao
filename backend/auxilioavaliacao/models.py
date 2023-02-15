@@ -204,7 +204,7 @@ class Answer(models.Model):
             raise ValidationError(_("O valor não pode ser maior que o valor da questão"))
 
     def save(self, *args, **kwargs):
-        
+
         # Se update (objeto já possui ID do banco)
         if self.id:
             previous = Answer.objects.get(pk=self.id)
@@ -213,6 +213,21 @@ class Answer(models.Model):
             if previous.x != self.x or previous.y != self.y or previous.width != self.width or previous.height != self.height:
                 self.modified = True
                 self.get_image()
+
+                # Se propagar foi selecionado, irá realizar a correção para outras resposta desta submissão
+                if kwargs.pop('propagate', False):
+                    xOffset = previous.x - self.x
+                    yOffset = previous.y - self.y
+                    widthOffset = self.width / previous.width
+                    heightOffset = self.height / previous.height
+
+                    for answer in self.submission.answers.exclude(id=self.id):
+                        answer.x -= xOffset
+                        answer.y -= yOffset
+                        answer.width *= widthOffset
+                        answer.height *= heightOffset
+                        answer.save()
+
             # Se grupo alterado
             if previous.group != self.group and self.group != None:
                 self.points = self.group.points

@@ -26,6 +26,7 @@ const Answer = ({
         width: (answer.width / answer.submission_width) * 100,
         height: (answer.height / answer.submission_height) * 100,
     });
+    const [ propagate, setPropagate ] = useState(true);
     
     const saveModification = () => {
 
@@ -36,7 +37,8 @@ const Answer = ({
             width: parseInt((cropRegion.width / 100) * answer.submission_width),
             height: parseInt((cropRegion.height / 100) * answer.submission_height),
 
-            modified: true
+            modified: true,
+            propagate: propagate
         };
 
         const csrftoken = getCookie('csrfToken');
@@ -129,6 +131,12 @@ const Answer = ({
                 { toggleModification && (
                 <div>
                     <button onClick={() => saveModification()}> Salvar edição </button>
+
+                    <div>
+                        <label htmlFor="propagate-modification">Propagar edição para outras respostas?</label>
+                        <input checked={propagate} onChange={() => propagate ? setPropagate(false) : setPropagate(true)} type="checkbox" name="propagate-modification" id="propagate-modification" />
+                    </div>
+
                     <SelectionTool
                         src={answer.submission_image}
                         crop={cropRegion}

@@ -114,8 +114,26 @@ class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswersSerializer
 
+    def update(self, request, *args, **kwargs):
+
+        answer = self.get_object()
+        answer.x = request.data['x']
+        answer.y = request.data['y']
+        answer.width = request.data['width']
+        answer.height = request.data['height']
+
+        answer.save(propagate = True)
+
+        serialized = AnswersSerializer(answer)
+
+        return Response(serialized.data)
+
+
 # ANSWER GROUP #
 class AnswerGroupViewSet(viewsets.ModelViewSet):
+    """ Grupo de Respostas
+    """
+
     queryset = AnswerGroup.objects.all()
     serializer_class = AnswerGroupSerializer
 
