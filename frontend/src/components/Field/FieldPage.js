@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 import { getCookie } from "../../utils/cookie";
 import AnswerList from "../Answer/AnswerList";
 import AnswerGroup from "../AnswerGroup/AnswerGroup";
-import AnswerGroupList from "../AnswerGroup/AnswerGroupList";
 import NewGroup from "../AnswerGroup/NewGroup";
 
 const FieldPage = () => {
@@ -16,9 +14,9 @@ const FieldPage = () => {
     const [ field, setField ] = useState(null);
     const [ answers, setAnswers ] = useState([]);
     const [ answerGroups, setAnswerGroups ] = useState([]);
+
     const [ selectedAnswers, setSelectedAnswers ] = useState([]);
-    const [ selectedGroupId, setSelectedGroupId ] = useState(null);
-    const [ hideGrouped, setHideGrouped ] = useState(true);
+    const [ selectedGroupId, setSelectedGroupId ] = useState("");
 
     const addSelectedAnswer = (id) => {
         const newSelectedAnswers = [...selectedAnswers, id];
@@ -30,8 +28,7 @@ const FieldPage = () => {
     }
 
     const addAnswersToGroup = () => {
-        const groupId = selectedGroupId;
-        setGroupToAnswers(groupId);
+        setGroupToAnswers(selectedGroupId);
     }
     const removeAnswersFromGroup = () => {
         const groupId = null;
@@ -57,6 +54,11 @@ const FieldPage = () => {
         })
     }
 
+    const getField = () => {
+        fetch(`http://127.0.0.1:8000/api/fields/${field_id}/`)
+        .then(response => response.json())
+        .then(data => setField(data));
+    }
 
     const getAnswers = () => {
         fetch(`http://127.0.0.1:8000/api/fields/${field_id}/answers/`)
@@ -87,17 +89,17 @@ const FieldPage = () => {
     }
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/fields/${field_id}/`)
-        .then(response => response.json())
-        .then(data => {
-            setField(data)
-        }).then(() => {
-            getAnswers();
-            getAnswerGroups();
-        }).then(() => {
-            setSelectedGroupId(answerGroups[0].id || null)
-        });
+        getField();
+        getAnswers();
+        getAnswerGroups();
     }, [field_id]);
+
+    // Para selecionar o grupo só depois de carregar os grupos
+    useEffect(() => {
+        if(answerGroups.length > 0){
+            setSelectedGroupId(answerGroups[0].id);
+        }
+    }, [answerGroups]);
 
     return (field && (
         <div className="field-page">
@@ -132,34 +134,36 @@ const FieldPage = () => {
                 <h4> Novo Grupo </h4>
                 <NewGroup field={field} onNewGroupCreated={getAnswerGroups} />
                 
-                {answerGroups.length > 0 && (
+                {selectedGroupId && (
                 <div>
-                    <h4>Selecionar grupo</h4>
-                    <select name="group" id="group" value={selectedGroupId} onChange={(e) => {setSelectedGroupId(Number(e.target.value) || null)}}>
-                        { answerGroups.map(group => (
-                            <option value={group.id} key={group.id}>
-                                { group.name }
-                            </option>
-                        ))}
-                    </select>
+                    <div>
+                        <h4>Selecionar grupo</h4>
+                        <select name="group" id="group" value={selectedGroupId} onChange={(e) => {setSelectedGroupId(Number(e.target.value) || null)}}>
+                            { answerGroups.map(group => (
+                                <option value={group.id} key={group.id}>
+                                    { group.name }
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    
+                    
+                    <AnswerGroup
+                        answerGroup={answerGroups.filter(group => group.id === selectedGroupId)[0]}
+                        onGroupModified={getAnswers}
+                        key={selectedGroupId}
+                    />
+                    
+                    <AnswerList
+                        allowSelection={true}
+                        onAnswerSelected={(id) => addSelectedAnswer(id)}
+                        onAnswerUnselected={(id) => removeSelectedAnswer(id)}
+                        answers={answers.filter(answer => answer.group === selectedGroupId)}
+                        onAnswerModified={getAnswers}
+                        key={answers}
+                    />
                 </div>
                 )}
-                
-                {selectedGroupId && 
-                    <AnswerGroup 
-                        answerGroup={answerGroups.filter(group => group.id === selectedGroupId)[0]} 
-                        onGroupModified={getAnswers}
-                    />
-                }
-
-                <AnswerList 
-                    allowSelection={true}
-                    onAnswerSelected={(id) => addSelectedAnswer(id)}
-                    onAnswerUnselected={(id) => removeSelectedAnswer(id)}
-                    answers={selectedGroupId != null && answers.filter(answer => answer.group === selectedGroupId) || []}
-                    onAnswerModified={getAnswers}
-                    key={answers}
-                /> 
             </div>
         </div>
     ));

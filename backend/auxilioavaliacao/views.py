@@ -122,7 +122,7 @@ class AnswerViewSet(viewsets.ModelViewSet):
         answer.width = request.data['width']
         answer.height = request.data['height']
 
-        answer.save(propagate = True)
+        answer.save(propagate = request.data['propagate'])
 
         serialized = AnswersSerializer(answer)
 

@@ -1,14 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { getCookie } from "../../utils/cookie";
 
 const AnswerGroup = ({ answerGroup, onGroupModified }) => {
 
+    const [points, setPoints] = useState(answerGroup.points);
+    const [feedback, setFeedback] = useState(answerGroup.feedback);
+
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        const points = event.target.points.value;
-        const feedback = event.target.feedback.value;
 
         const csrfToken = getCookie('csrfToken');
 
@@ -30,12 +30,9 @@ const AnswerGroup = ({ answerGroup, onGroupModified }) => {
     return (
     <div className="answergroup">
         <h3>{ answerGroup.name }</h3>
-
-        {console.log(answerGroup)}
-        
         <form onSubmit={(event) => handleSubmit(event)}>
-            <input name="points" id="points" value={answerGroup.points} min={0} max={answerGroup.field_points} placeholder="Nota" type="number" /> / {answerGroup.field_points}
-            <textarea name="feedback" id="feedback" defaultValue={answerGroup.feedback} placeholder="Comentário" cols="30" rows="1"></textarea>
+            <input value={points} onChange={e => setPoints(e.target.value)} min={0} max={answerGroup.field_points} name="points" id="points" placeholder="Nota" type="number" /> / {answerGroup.field_points}
+            <textarea defaultValue={feedback} onChange={e => setFeedback(e.target.value)} name="feedback" id="feedback" placeholder="Comentário" cols="30" rows="1"></textarea>
             <input type="submit" value="Salvar nota" />
         </form>
     </div>

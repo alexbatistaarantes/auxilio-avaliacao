@@ -209,7 +209,7 @@ class Answer(models.Model):
         if self.id:
             previous = Answer.objects.get(pk=self.id)
 
-            # Se região alterada
+            # Se região alterada, salva imagem novamente
             if previous.x != self.x or previous.y != self.y or previous.width != self.width or previous.height != self.height:
                 self.modified = True
                 self.get_image()
