@@ -22,9 +22,10 @@ router.register(r'answers', views.AnswerViewSet, basename='answer')
 
 app_name = 'auxilioavaliacao'
 urlpatterns = [
-    # REST API
+    # Rotas para views de função
     path(r'api/', include(router.urls)),
     path(r'api/update_answers_group', views.update_answers_group, name='update-answer-group'),
     path('api/get_assignment_grading_sheet/<int:assignment_id>', views.get_assignment_grading_sheet, name='get-assignment-grading-sheet'),
-    path('api/download_submission_grading/<int:submission_id>', views.download_submission_grading, name='get-submission-grading')
+    path('api/download_submission_grading/<int:submission_id>', views.download_submission_grading, name='get-submission-grading'),
+    path('api/email_grading/<int:assignment_id>', views.email_grading, name='email-grading')
 ]

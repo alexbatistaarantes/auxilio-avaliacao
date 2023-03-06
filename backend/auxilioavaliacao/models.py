@@ -158,13 +158,12 @@ class AnswerGroup(models.Model):
 
     def save(self, *args, **kwargs):
 
-        # Se UPDATE
+        # Verificando se ponto e/ou comentário foi salvo, para propagar ponto e/ou comentário para respostas do grupo
         if self.id:
             # Obtém a linha antes da alteração
             previous = AnswerGroup.objects.get(pk=self.id)
             # Se pontos ou comentário foi alterado
             if previous and (self.points != previous.points or self.feedback != previous.feedback):
-                # Altera pontos e comentários das respostas que estão no grupo
                 for answer in self.answers.all():
                     answer.points = self.points
                     answer.feedback = self.feedback

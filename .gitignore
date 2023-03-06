@@ -178,3 +178,6 @@ yarn-error.log*
 # Backend
 backend/media
 backend/reports
+
+# Credenciais do e-mail
+.env

@@ -5,11 +5,21 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import xlwt
+from django.conf import settings
+from django.core.mail import send_mail
 #import pdfkit
 
 from .models import *
 from .serializers import *
-from .utils import get_submission_grading
+from .utils import get_submission_grading, send_grading_email
+
+import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+SEND_EMAIL = os.environ.get("EMAIL")
+PASSWORD = os.environ.get("PASSWORD")
 
 # REST API
 
@@ -128,7 +138,6 @@ class AnswerViewSet(viewsets.ModelViewSet):
 
         return Response(serialized.data)
 
-
 # ANSWER GROUP #
 class AnswerGroupViewSet(viewsets.ModelViewSet):
     """ Grupo de Respostas
@@ -159,6 +168,8 @@ def update_answers_group(request):
     return Response(AnswerGroupSerializer(group).data)
 
 def get_assignment_grading_sheet(request, assignment_id):
+    """ Cria e retorna planilha com notas e correções de todas as entregas
+    """
 
     assignment = get_object_or_404(Assignment, pk=assignment_id)
 
@@ -211,3 +222,18 @@ def download_submission_grading(request, submission_id):
     response['Content-Disposition'] = f"inline; filename=\"{submission.assignment.title}-{submission.studentId}.pdf\""
 
     return response
+
+def email_grading(request, assignment_id):
+
+    # TODO: Obter entregas
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+    submissions = assignment.submissions
+
+    # TODO: Percorrer entregas
+    for submission in submissions.all():
+    #   - para cada uma, obter correção
+        grading = get_submission_grading(submission)
+    #   - enviar e-mail
+        send_grading_email(assignment, submission, grading, SEND_EMAIL, PASSWORD)
+
+    return HttpResponse(status=200)
