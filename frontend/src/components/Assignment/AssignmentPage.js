@@ -51,6 +51,12 @@ const AssignmentPage = () => {
         }
     }
 
+    const emailGrading = () => {
+        if(window.confirm("Confirme que você deseja enviar a correção para os alunos")){
+            fetch(`http://127.0.0.1:8000/api/email_grading/${assignment.id}`);
+        }
+    }
+
     useEffect(() => {
         const getAssignment = () => {
             fetch(`http://127.0.0.1:8000/api/assignments/${id}/`)
@@ -60,8 +66,6 @@ const AssignmentPage = () => {
                 setAssignment(data);
             });
         }
-
-        console.log(id);
 
         getAssignment();
         getFields();
@@ -73,7 +77,8 @@ const AssignmentPage = () => {
             <div className="assignment-infos">
                 <p> Título: { assignment.title } </p>
                 <p> Valor da atividade: { assignment.total_points} </p>
-                <a href={`http://127.0.0.1:8000/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar correção </a>
+                <a href={`http://127.0.0.1:8000/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar planilha de correção </a>
+                <button onClick={emailGrading}>Enviar correção por e-mail</button>
                 <br />
 
                 <button onClick={deleteAssignment}> Excluir Atividde </button>
