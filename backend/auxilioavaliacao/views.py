@@ -225,15 +225,11 @@ def download_submission_grading(request, submission_id):
 
 def email_grading(request, assignment_id):
 
-    # TODO: Obter entregas
     assignment = get_object_or_404(Assignment, pk=assignment_id)
     submissions = assignment.submissions
 
-    # TODO: Percorrer entregas
     for submission in submissions.all():
-    #   - para cada uma, obter correção
         grading = get_submission_grading(submission)
-    #   - enviar e-mail
         send_grading_email(assignment, submission, grading, SEND_EMAIL, PASSWORD)
 
     return HttpResponse(status=200)
