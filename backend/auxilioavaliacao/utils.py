@@ -59,7 +59,7 @@ def send_grading_email(assignment, submission, grading: bytearray, send_email, p
 
     msg = MIMEMultipart()
     
-    msg['From'] = 'auxilioavaliacao@gmail.com'
+    msg['From'] = send_email
     msg['To'] = submission.studentId
     msg['Subject'] = f"Correção {assignment.title}"
     body = f"""Correção da Atividade "{assignment.title}" em anexo."""
@@ -74,5 +74,5 @@ def send_grading_email(assignment, submission, grading: bytearray, send_email, p
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()    
     s.login(send_email, password)
-    s.sendmail('auxilioavaliacao@gmail.com', submission.studentId, msg.as_string())
+    s.sendmail(send_email, submission.studentId, msg.as_string())
     s.quit()
