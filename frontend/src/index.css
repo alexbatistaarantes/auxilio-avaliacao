@@ -152,6 +152,13 @@ div.field-page > div {
   border: 1px solid black;
 }
 
+div.field-page > div.group-controls {
+  flex: none;
+
+  text-align: center;
+  border: none;
+}
+
 div.field-page > div.answer-groups {
   flex: 2 2 auto;
 }
