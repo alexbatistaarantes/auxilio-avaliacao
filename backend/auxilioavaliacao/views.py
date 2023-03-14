@@ -1,17 +1,16 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
-from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 import xlwt
-from django.conf import settings
-from django.core.mail import send_mail
-#import pdfkit
 
 from .models import *
 from .serializers import *
 from .utils import get_submission_grading, send_grading_email
+from .sorters import *
 
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -166,6 +165,20 @@ def update_answers_group(request):
         answer.full_clean()
         answer.save()
     return Response(AnswerGroupSerializer(group).data)
+
+def get_sorters(request):
+
+    return JsonResponse(list(sorters.keys()), safe=False)
+
+@api_view(['PATCH'])
+def sort_answers(request):
+
+    field = get_object_or_404(Field, pk=request.data['field'])
+    sorter = request.data['sorter']
+
+    sorters[sorter](field)
+
+    return HttpResponse(status=200)
 
 def get_assignment_grading_sheet(request, assignment_id):
     """ Cria e retorna planilha com notas e correções de todas as entregas

@@ -14,6 +14,7 @@ const FieldPage = () => {
     const [ field, setField ] = useState(null);
     const [ answers, setAnswers ] = useState([]);
     const [ answerGroups, setAnswerGroups ] = useState([]);
+    const [ sorters, setSorters ] = useState([]);
 
     const [ selectedAnswers, setSelectedAnswers ] = useState([]);
     const [ selectedGroupId, setSelectedGroupId ] = useState("");
@@ -54,6 +55,24 @@ const FieldPage = () => {
         })
     }
 
+    const groupAutomatically = () => {
+        fetch(`http://127.0.0.1:8000/api/sort`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                //'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                field: field_id,
+                sorter: document.querySelector("#sorter").value
+            })
+        }).then(() => {
+            getAnswers();
+            getAnswerGroups();
+            setSelectedAnswers([]);
+        })
+    }
+
     const getField = () => {
         fetch(`http://127.0.0.1:8000/api/fields/${field_id}/`)
         .then(response => response.json())
@@ -70,6 +89,12 @@ const FieldPage = () => {
         fetch(`http://127.0.0.1:8000/api/fields/${field_id}/groups/`)
         .then(response => response.json())
         .then(data => setAnswerGroups(data));
+    }
+
+    const getSorters = () => {
+        fetch(`http://127.0.0.1:8000/api/sorters`)
+        .then(response => response.json())
+        .then(data => setSorters(data));
     }
 
     const deleteField = () => {
@@ -92,6 +117,7 @@ const FieldPage = () => {
         getField();
         getAnswers();
         getAnswerGroups();
+        getSorters();
     }, [field_id]);
 
     // Para selecionar o grupo só depois de carregar os grupos
@@ -118,15 +144,28 @@ const FieldPage = () => {
                 />)}
             </div>
             
-            { answerGroups && (
-                <span>
-                    <button onClick={addAnswersToGroup}>{ ">" }</button>
-                    <br />
-                    <button onClick={removeAnswersFromGroup}>{ "<" }</button>
-                    <br />
-                    <button>Agrupar automaticamente</button>
-                </span>
-            )}
+            <div className="group-controls">
+                { answerGroups && (
+                    <span>
+                        <button onClick={addAnswersToGroup}>{ ">" }</button>
+                        <br />
+                        <button onClick={removeAnswersFromGroup}>{ "<" }</button>
+                        <br />
+                    </span>
+                )}
+                <br />
+                { sorters.length > 0 && (
+                    <span>
+                        <select name="sorter" id="sorter">
+                        {sorters.map(sorter => (
+                            <option value={sorter} key={sorter}>{sorter}</option>
+                        ))}
+                        </select>
+                        <br />
+                        <button onClick={groupAutomatically}>Agrupar automaticamente</button>
+                    </span>
+                )}
+            </div>
 
             <div>
                 <h2> Grupos </h2>
