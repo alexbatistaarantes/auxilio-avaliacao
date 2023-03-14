@@ -126,12 +126,22 @@ class AnswerViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
 
         answer = self.get_object()
-        answer.x = request.data['x']
-        answer.y = request.data['y']
-        answer.width = request.data['width']
-        answer.height = request.data['height']
+        kwargs = {}
 
-        answer.save(propagate = request.data['propagate'])
+        if(request.data.get('points')):
+            answer.points = request.data['points']
+            answer.feedback = request.data['feedback']
+        elif(request.data.get('x')):
+            answer.x = request.data['x']
+            answer.y = request.data['y']
+            answer.width = request.data['width']
+            answer.height = request.data['height']
+            kwargs = {'propagate': request.data['propagate']}
+        elif(request.data.get('group')):
+            group = AnswerGroup.objects.get(pk=request['group'])
+            answer.group = group
+
+        answer.save(**kwargs)
 
         serialized = AnswersSerializer(answer)
 

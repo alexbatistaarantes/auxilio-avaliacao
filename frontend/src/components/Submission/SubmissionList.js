@@ -13,7 +13,7 @@ const SubmissionList = ({ submissions }) => {
                             <img className="document-image" src={ submission.image } alt="Folha de resposta" />
                         </div>
                     </Link>
-                    <a href={`http://127.0.0.1:8000/api/get_submission_grading_report/${submission.id}`} target='_blank'> Correção </a>
+                    <a href={`http://127.0.0.1:8000/api/download_submission_grading/${submission.id}`} target='_blank'> Correção </a>
                 </li>
             ))}
             </ul>
