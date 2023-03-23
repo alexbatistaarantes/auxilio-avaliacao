@@ -1,15 +1,17 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.core.files.images import ImageFile
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+import io
 import xlwt
 
 from .models import *
 from .serializers import *
-from .utils import get_submission_grading, send_grading_email
+from .utils import get_submission_grading, send_grading_email, get_submissions_email
 from .sorters import *
 
 import os
@@ -17,7 +19,7 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-SEND_EMAIL = os.environ.get("EMAIL")
+EMAIL = os.environ.get("EMAIL")
 PASSWORD = os.environ.get("PASSWORD")
 
 # REST API
@@ -253,6 +255,25 @@ def email_grading(request, assignment_id):
 
     for submission in submissions.all():
         grading = get_submission_grading(submission)
-        send_grading_email(assignment, submission, grading, SEND_EMAIL, PASSWORD)
+        send_grading_email(assignment, submission, grading, EMAIL, PASSWORD)
+
+    return HttpResponse(status=200)
+
+def get_submissions_from_email(request, assignment_id):
+
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+
+    for submission_request in get_submissions_email(assignment, EMAIL, PASSWORD):
+        email = submission_request['email']
+        image_type = submission_request['file'][0]
+        image = ImageFile(io.BytesIO(submission_request['file'][1]), name=f"{email}.{image_type}")
+
+        if Submission.objects.filter(assignment=assignment, studentId = email).exists():
+            submission = Submission.objects.get(assignment=assignment, studentId = email)
+            submission.image = image
+        else:
+            submission = Submission(assignment=assignment, studentId=submission_request['email'], image=image)
+
+        submission.save()
 
     return HttpResponse(status=200)

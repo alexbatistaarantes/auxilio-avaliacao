@@ -13,6 +13,15 @@ const SubmissionPage = () => {
     const [ submission, setSubmission ] = useState(null);
     const [ answers, setAnswers ] = useState([]);
 
+    const getSubmission = () => {
+        fetch(`http://127.0.0.1:8000/api/submissions/${submission_id}/`)
+        .then((response) => {
+            return response.json();
+        }).then((data) => {
+            setSubmission(data);
+        });
+    }
+
     const getAnswers = () => {
         fetch(`http://127.0.0.1:8000/api/submissions/${submission_id}/answers/`)
         .then(response => {
@@ -23,15 +32,7 @@ const SubmissionPage = () => {
     }
 
     useEffect(() => {
-        const getSubmission = () => {
-            fetch(`http://127.0.0.1:8000/api/submissions/${submission_id}/`)
-            .then((response) => {
-                return response.json();
-            }).then((data) => {
-                setSubmission(data);
-            });
-        }
-
+        getSubmission();
         getSubmission();
         getAnswers();
     }, [submission_id]);
@@ -65,7 +66,7 @@ const SubmissionPage = () => {
 
             <div>
                 <h2>Respostas</h2>
-                <AnswerList answers={answers} answerTitle="label" onAnswerModified={() => getAnswers()}/>
+                <AnswerList answers={answers} answerTitle="label" onAnswerModified={() => {getSubmission(); getAnswers();}}/>
             </div>
         </div>
     ));
