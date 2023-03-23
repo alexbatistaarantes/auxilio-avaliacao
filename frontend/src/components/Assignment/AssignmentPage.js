@@ -57,6 +57,11 @@ const AssignmentPage = () => {
         }
     }
 
+    const getSubmissionsFromEmail = () => {
+        fetch(`http://127.0.0.1:8000/api/get_submissions_from_email/${assignment.id}`)
+        .then(getSubmissions);
+    }
+
     useEffect(() => {
         const getAssignment = () => {
             fetch(`http://127.0.0.1:8000/api/assignments/${id}/`)
@@ -78,6 +83,8 @@ const AssignmentPage = () => {
                 <p> Título: { assignment.title } </p>
                 <p> Valor da atividade: { assignment.total_points} </p>
                 <a href={`http://127.0.0.1:8000/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar planilha de correção </a>
+                <br />
+
                 <button onClick={emailGrading}>Enviar correção por e-mail</button>
                 <br />
 
@@ -95,6 +102,9 @@ const AssignmentPage = () => {
 
             <div className="assignment-submissions">
                 <h3> Entregas </h3>
+
+                <button onClick={getSubmissionsFromEmail}>Inserir entregas a partir do e-mail</button>
+
                 <NewSubmissions assignment={assignment} onNewSubmissionCreated={getSubmissions} />
                 <SubmissionList submissions={submissions} />
             </div>

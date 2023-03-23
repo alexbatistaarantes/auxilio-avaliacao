@@ -9,6 +9,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+from email import message_from_bytes
+import imaplib
+import re
 
 def crop_image(image, box):
     img = Image.open(image)
@@ -76,3 +79,37 @@ def send_grading_email(assignment, submission, grading: bytearray, send_email, p
     s.login(send_email, password)
     s.sendmail(send_email, submission.studentId, msg.as_string())
     s.quit()
+
+def get_submissions_email(assignment, recv_email, password):
+
+    imap = imaplib.IMAP4_SSL("imap.gmail.com")
+    imap.login(recv_email, password)
+
+    imap.select(readonly = True)
+    _, data = imap.search(None, 'ALL')
+    emails_ids = data[0].split()
+
+    for id in emails_ids:
+        _, data = imap.fetch(id, '(RFC822)')
+
+        mail = message_from_bytes(data[0][1])
+
+        # Skip if title is not the name of the assignment
+        if assignment.title.lower() not in mail['Subject'].lower().strip():
+            continue
+
+        student_email = re.search(r".* <(.*)>", mail['From']).group(1)
+
+        for part in mail.walk():
+            if part.get_content_type().startswith('image/'):
+                file_type = re.search(r".*\.(\w*)$", part.get_filename()).group(1)
+                if file_type.lower() in ['png', 'jpg', 'jpeg']:
+                    payload = part.get_payload(decode=True)
+                    submission = {
+                        'email': student_email,
+                        'file': [file_type, payload]
+                    }
+                    yield submission
+
+    imap.close()
+    imap.logout()
