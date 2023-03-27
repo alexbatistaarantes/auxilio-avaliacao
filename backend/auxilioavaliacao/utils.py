@@ -17,6 +17,8 @@ def crop_image(image, box):
     img = Image.open(image)
     # Obtendo a extensão
     _, extension = split_filename_and_extension(image.name)
+    if extension.lower() == 'jpg':
+        extension = 'JPEG'
     # Corta a imagem
     cropped = img.crop(box)
     # Salvando em um BytesIO

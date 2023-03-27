@@ -46,6 +46,7 @@ const NewSubmissions = ({ assignment, onNewSubmissionCreated }) => {
                 <input name="submission" id="submission"
                     onChange={(event) => onFileChange(event.target.files)}
                     type="file"
+                    accept=".png, .jpg, .jpeg"
                     multiple
                     required
                 />

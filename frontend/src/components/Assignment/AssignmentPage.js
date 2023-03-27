@@ -88,7 +88,7 @@ const AssignmentPage = () => {
                 <button onClick={emailGrading}>Enviar correção por e-mail</button>
                 <br />
 
-                <button onClick={deleteAssignment}> Excluir Atividde </button>
+                <button onClick={deleteAssignment}> Excluir Atividade </button>
                 <br />
 
                 <img id="main-document" className="document-image" src={assignment.template_image} alt="Folha de respostas" />

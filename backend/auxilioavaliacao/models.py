@@ -91,6 +91,10 @@ class Submission(models.Model):
 
     def save(self, *args, **kwargs):
         
+        _, extension = split_filename_and_extension(self.image.name)
+        if extension.lower() not in ['png', 'jpeg', 'jpg']:
+            raise ValidationError("Extensão não suportada")
+            
         super().save(*args, **kwargs)
 
         self.createAnswers()
