@@ -35,7 +35,7 @@ class Field(models.Model):
 
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='fields', help_text="A atividade de qual o campo faz parte")
     label = models.CharField(max_length=50, null=False, blank=False, help_text="O nome do campo")
-    points = models.IntegerField(default=0, null=False, blank=False, help_text="A nota dessa questão")
+    points = models.FloatField(default=0, null=False, blank=False, help_text="A nota dessa questão")
     image = models.ImageField(upload_to='fields', null=True, blank=True, help_text="A imagem do campo")
     x = models.IntegerField(null=False, blank=False, help_text="A coordenada X do ponto esquerdo superior em referência a imagem da entrega")
     y = models.IntegerField(null=False, blank=False, help_text="A coordenada Y do ponto esquerdo superior em referência a imagem da entrega")
@@ -147,7 +147,7 @@ class Submission(models.Model):
 class AnswerGroup(models.Model):
     field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='groups', help_text="O campo das respostas agrupadas neste grupo")
     name = models.CharField(max_length=30, null=False, blank=False, help_text="Um curto descritor do agrupamento (por exemplo, o conteúdo das respostas)")
-    points = models.IntegerField(default=0, null=False, blank=True, help_text="A nota dessa resposta")
+    points = models.FloatField(default=0, null=False, blank=True, help_text="A nota dessa resposta")
     feedback = models.CharField(max_length=500, default="", null=False, blank=True, help_text="Um comentário a respeito da resposta")
 
     class Meta:
@@ -182,7 +182,7 @@ class Answer(models.Model):
 
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name='answers', help_text="A entrega da qual essa resposta faz parte")
     field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='answers', help_text="O campo desta resposta")
-    points = models.IntegerField(default=0, null=False, blank=False, help_text="A nota dessa resposta")
+    points = models.FloatField(default=0, null=False, blank=False, help_text="A nota dessa resposta")
     feedback = models.CharField(max_length=500, default='', null=True, blank=True, help_text="Um comentário a respeito da resposta")
     image = models.ImageField(
         upload_to='submissionFields',

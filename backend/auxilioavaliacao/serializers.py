@@ -5,7 +5,7 @@ from .models import *
 
 class AssignmentSerializer(serializers.ModelSerializer):
     fields = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    total_points = serializers.IntegerField(read_only=True)
+    total_points = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Assignment        
@@ -21,8 +21,8 @@ class FieldSerializer(serializers.ModelSerializer):
 
 class SubmissionSerializer(serializers.ModelSerializer):
     assignment_title = serializers.CharField(source='assignment.title')
-    assignment_total_points = serializers.IntegerField(source='assignment.total_points')
-    total_points = serializers.IntegerField(read_only=True)
+    assignment_total_points = serializers.FloatField(source='assignment.total_points')
+    total_points = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Submission
@@ -35,7 +35,7 @@ class AnswersSerializer(serializers.ModelSerializer):
     submission_height = serializers.FloatField(source='submission.height')
 
     field_label = serializers.CharField(source='field.label')
-    field_points = serializers.IntegerField(source='field.points')
+    field_points = serializers.FloatField(source='field.points')
     
     group_name = serializers.CharField(source='group.name', allow_null=True)
 
@@ -46,7 +46,7 @@ class AnswersSerializer(serializers.ModelSerializer):
 class AnswerGroupSerializer(serializers.ModelSerializer):
     assignment_title = serializers.CharField(source='field.assignment.title', read_only=True)
     
-    field_points = serializers.IntegerField(source='field.points', read_only=True)
+    field_points = serializers.FloatField(source='field.points', read_only=True)
     field_label = serializers.CharField(source='field.label', read_only=True)
 
     answers = AnswersSerializer(many=True, read_only=True)

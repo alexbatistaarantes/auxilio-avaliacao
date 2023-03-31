@@ -66,7 +66,7 @@ const NewField = ({ assignment, onNewFieldCreated }) => {
                         required
                     />
 
-                    <input name="points" id="points" placeholder="Points" type="number" />
+                    <input name="points" id="points" placeholder="Points" type="number" step="0.01" />
                 </div>
                 <input type="submit" value="Criar campo" />
                 <br />

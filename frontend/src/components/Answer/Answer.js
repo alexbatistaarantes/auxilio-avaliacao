@@ -107,10 +107,10 @@ const Answer = ({
             
             {/*  */}
             <form onSubmit={(event) => handleSubmit(event)}>
-                <input name="points" id="points"
+                <input name="points" id="points" type="number" step="0.01"
                     defaultValue={answer.points}
                     min={0} max={answer.field_points}
-                    placeholder="Nota" type="number"
+                    placeholder="Nota"
                     disabled={answer.group_name && true}
                 /> / {answer.field_points}
                 <textarea name="feedback" id="feedback"

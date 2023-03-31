@@ -31,7 +31,7 @@ const AnswerGroup = ({ answerGroup, onGroupModified }) => {
     <div className="answergroup">
         <h3>{ answerGroup.name }</h3>
         <form onSubmit={(event) => handleSubmit(event)}>
-            <input value={points} onChange={e => setPoints(e.target.value)} min={0} max={answerGroup.field_points} name="points" id="points" placeholder="Nota" type="number" /> / {answerGroup.field_points}
+            <input value={points} onChange={e => setPoints(e.target.value)} min={0} max={answerGroup.field_points} name="points" id="points" placeholder="Nota" type="number" step="0.01" /> / {answerGroup.field_points}
             <textarea defaultValue={feedback} onChange={e => setFeedback(e.target.value)} name="feedback" id="feedback" placeholder="Comentário" cols="30" rows="1"></textarea>
             <input type="submit" value="Salvar nota" />
         </form>
