@@ -146,7 +146,7 @@ class Submission(models.Model):
 
 class AnswerGroup(models.Model):
     field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='groups', help_text="O campo das respostas agrupadas neste grupo")
-    name = models.CharField(max_length=30, null=False, blank=False, help_text="Um curto descritor do agrupamento (por exemplo, o conteúdo das respostas)")
+    name = models.CharField(max_length=1000, null=False, blank=False, help_text="Um curto descritor do agrupamento (por exemplo, o conteúdo das respostas)")
     points = models.FloatField(default=0, null=False, blank=True, help_text="A nota dessa resposta")
     feedback = models.CharField(max_length=500, default="", null=False, blank=True, help_text="Um comentário a respeito da resposta")
 

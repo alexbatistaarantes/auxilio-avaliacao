@@ -8,7 +8,6 @@ const FieldList = ({ fields }) => {
 
     return (
         <div className="field-list region-list">
-            <button onClick={() => setShowSubmission(!showSubmission)}> Mostrar </button>
             <ul>
             {fields.map((field) => (
             <li key={ field.id } >
