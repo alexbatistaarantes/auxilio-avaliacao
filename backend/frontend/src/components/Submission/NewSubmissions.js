@@ -20,7 +20,7 @@ const NewSubmissions = ({ assignment, onNewSubmissionCreated }) => {
         
         const csrfToken = getCookie('csrfToken');
 
-        fetch(`http://127.0.0.1:8000/api/submissions/`, {
+        fetch(`/api/submissions/`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': csrfToken

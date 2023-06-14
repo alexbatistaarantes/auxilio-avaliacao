@@ -10,7 +10,7 @@ const Layout = () => {
 
     useEffect(() => {
         const getAssignment = () => {
-            fetch(`http://127.0.0.1:8000/api/assignments/${assignment_id}/`)
+            fetch(`/api/assignments/${assignment_id}/`)
             .then((response) => {
                 return response.json();
             }).then((data) => {

@@ -11,7 +11,7 @@ const AnswerGroupPage = () => {
 
     useEffect(() => {
 
-        fetch(`http://127.0.0.1:8000/api/groups/${group_id}/`)
+        fetch(`/api/groups/${group_id}/`)
         .then(response => response.json())
         .then(data => {
             setGroup(data);

@@ -11,8 +11,8 @@ const NewGroup = ({ field, onNewGroupCreated }) => {
         
         const csrftoken = getCookie('csrftoken');
 
-        //fetch(`http://127.0.0.1:8000/api/fields/${field.id}/groups/`, {
-        fetch(`http://127.0.0.1:8000/api/groups/`, {
+        //fetch(`/api/fields/${field.id}/groups/`, {
+        fetch(`/api/groups/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ const AssignmentPage = () => {
     const [ submissions, setSubmissions ] = useState([]);
 
     const getFields = () => {
-        fetch(`http://127.0.0.1:8000/api/assignments/${id}/fields/`)
+        fetch(`/api/assignments/${id}/fields/`)
         .then(response => {
             return response.json()
         }).then(data => {
@@ -27,7 +27,7 @@ const AssignmentPage = () => {
     }
 
     const getSubmissions = () => {
-        fetch(`http://127.0.0.1:8000/api/assignments/${id}/submissions/`)
+        fetch(`/api/assignments/${id}/submissions/`)
         .then(response => {
             return response.json()
         }).then(data => {
@@ -40,7 +40,7 @@ const AssignmentPage = () => {
         if(window.confirm("Você tem certeza que deseja apagar a atividade?")){
             const csrftoken = getCookie('csrftoken');
 
-            fetch(`http://127.0.0.1:8000/api/assignments/${id}/`, {
+            fetch(`/api/assignments/${id}/`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRFToken': csrftoken
@@ -53,18 +53,18 @@ const AssignmentPage = () => {
 
     const emailGrading = () => {
         if(window.confirm("Confirme que você deseja enviar a correção para os alunos")){
-            fetch(`http://127.0.0.1:8000/api/email_grading/${assignment.id}`);
+            fetch(`/api/email_grading/${assignment.id}`);
         }
     }
 
     const getSubmissionsFromEmail = () => {
-        fetch(`http://127.0.0.1:8000/api/get_submissions_from_email/${assignment.id}`)
+        fetch(`/api/get_submissions_from_email/${assignment.id}`)
         .then(getSubmissions);
     }
 
     useEffect(() => {
         const getAssignment = () => {
-            fetch(`http://127.0.0.1:8000/api/assignments/${id}/`)
+            fetch(`/api/assignments/${id}/`)
             .then((response) => {
                 return response.json();
             }).then((data) => {
@@ -82,7 +82,7 @@ const AssignmentPage = () => {
             <div className="assignment-infos">
                 <p> Título: { assignment.title } </p>
                 <p> Valor da atividade: { assignment.total_points} </p>
-                <a href={`http://127.0.0.1:8000/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar planilha de correção </a>
+                <a href={`/api/get_assignment_grading_sheet/${assignment.id}`}> Baixar planilha de correção </a>
                 <br />
 
                 <button onClick={emailGrading}>Enviar correção por e-mail</button>

@@ -52,7 +52,7 @@
                 {% for answer in submission.answers.all %}
                 <tr>
                     <td>{{ answer.field.label }}</td>
-                    <td> <img src="http://127.0.0.1:8000{{ answer.image.url }}" alt="Imagem da resposta da questão {{ answer.field.label }}"> </td>
+                    <td> <img src="{{ answer.image.url }}" alt="Imagem da resposta da questão {{ answer.field.label }}"> </td>
                     <td>{{ answer.points }}</td>
                     <td>{{ answer.feedback }}</td>
                 </tr>

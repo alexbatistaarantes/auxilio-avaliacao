@@ -38,7 +38,7 @@ const FieldPage = () => {
     const setGroupToAnswers = (groupId) => {
         //const csrftoken = getCookie('csrftoken');
 
-        fetch(`http://127.0.0.1:8000/api/update_answers_group`, {
+        fetch(`/api/update_answers_group`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const FieldPage = () => {
     }
 
     const groupAutomatically = () => {
-        fetch(`http://127.0.0.1:8000/api/sort`, {
+        fetch(`/api/sort`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,25 +74,25 @@ const FieldPage = () => {
     }
 
     const getField = () => {
-        fetch(`http://127.0.0.1:8000/api/fields/${field_id}/`)
+        fetch(`/api/fields/${field_id}/`)
         .then(response => response.json())
         .then(data => setField(data));
     }
 
     const getAnswers = () => {
-        fetch(`http://127.0.0.1:8000/api/fields/${field_id}/answers/`)
+        fetch(`/api/fields/${field_id}/answers/`)
         .then(response => response.json())
         .then(data => setAnswers(data));
     }
 
     const getAnswerGroups = () => {
-        fetch(`http://127.0.0.1:8000/api/fields/${field_id}/groups/`)
+        fetch(`/api/fields/${field_id}/groups/`)
         .then(response => response.json())
         .then(data => setAnswerGroups(data));
     }
 
     const getSorters = () => {
-        fetch(`http://127.0.0.1:8000/api/sorters`)
+        fetch(`/api/sorters`)
         .then(response => response.json())
         .then(data => setSorters(data));
     }
@@ -102,7 +102,7 @@ const FieldPage = () => {
         if(window.confirm("Você tem certeza que deseja apagar o campo?")){
             const csrftoken = getCookie('csrftoken');
 
-            fetch(`http://127.0.0.1:8000/api/fields/${field_id}/`, {
+            fetch(`/api/fields/${field_id}/`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRFToken': csrftoken

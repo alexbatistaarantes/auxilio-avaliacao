@@ -7,7 +7,7 @@ const Home = () => {
     const [assignments, setAssignments] = useState([]);
 
     const getAssignments = () => {
-        fetch("http://127.0.0.1:8000/api/assignments/")
+        fetch("/api/assignments/")
         .then((response) => {
             return response.json();
         })

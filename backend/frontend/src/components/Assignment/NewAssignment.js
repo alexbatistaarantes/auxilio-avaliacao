@@ -21,7 +21,7 @@ const NewAssignment = ({ onNewAssignmentCreated }) => {
 
         const csrftoken = getCookie('csrftoken');
 
-        fetch('http://127.0.0.1:8000/api/assignments/', {
+        fetch('/api/assignments/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': csrftoken

@@ -32,7 +32,7 @@ const NewField = ({ assignment, onNewFieldCreated }) => {
 
         const csrftoken = getCookie('csrftoken');
 
-        fetch('http://127.0.0.1:8000/api/fields/', {
+        fetch('/api/fields/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -43,7 +43,7 @@ const Answer = ({
 
         const csrftoken = getCookie('csrfToken');
 
-        fetch(`http://127.0.0.1:8000/api/answers/${answer.id}/`, {
+        fetch(`/api/answers/${answer.id}/`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const Answer = ({
 
         const csrfToken = getCookie('csrfToken');
 
-        fetch(`http://127.0.0.1:8000/api/answers/${answer.id}/`, {
+        fetch(`/api/answers/${answer.id}/`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

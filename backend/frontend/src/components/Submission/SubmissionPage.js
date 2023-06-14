@@ -14,7 +14,7 @@ const SubmissionPage = () => {
     const [ answers, setAnswers ] = useState([]);
 
     const getSubmission = () => {
-        fetch(`http://127.0.0.1:8000/api/submissions/${submission_id}/`)
+        fetch(`/api/submissions/${submission_id}/`)
         .then((response) => {
             return response.json();
         }).then((data) => {
@@ -23,7 +23,7 @@ const SubmissionPage = () => {
     }
 
     const getAnswers = () => {
-        fetch(`http://127.0.0.1:8000/api/submissions/${submission_id}/answers/`)
+        fetch(`/api/submissions/${submission_id}/answers/`)
         .then(response => {
             return response.json()
         }).then(data => {
@@ -42,7 +42,7 @@ const SubmissionPage = () => {
         if(window.confirm("Você tem certeza que deseja apagar a entrega?")){
             const csrftoken = getCookie('csrftoken');
 
-            fetch(`http://127.0.0.1:8000/api/submissions/${submission_id}/`, {
+            fetch(`/api/submissions/${submission_id}/`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRFToken': csrftoken
@@ -58,7 +58,7 @@ const SubmissionPage = () => {
             <div className="submission-infos">
                 <h2> Aluno: { submission.studentId }</h2>
                 <p> Nota: {submission.total_points} / {submission.assignment_total_points} </p>
-                <a target="_blank" href={`http://127.0.0.1:8000/api/download_submission_grading/${submission.id}`}> Baixar correção </a>
+                <a target="_blank" href={`/api/download_submission_grading/${submission.id}`}> Baixar correção </a>
                 <button onClick={() => deleteSubmission()}> Excluir entrega </button>
                 <br />
                 <img id="main-document" className="document-image" src={submission.image} alt="Folha de respostas" />

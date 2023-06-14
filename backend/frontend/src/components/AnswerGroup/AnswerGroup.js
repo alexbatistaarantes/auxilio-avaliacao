@@ -12,7 +12,7 @@ const AnswerGroup = ({ answerGroup, onGroupModified }) => {
 
         const csrfToken = getCookie('csrfToken');
 
-        fetch(`http://127.0.0.1:8000/api/groups/${answerGroup.id}/`, {
+        fetch(`/api/groups/${answerGroup.id}/`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
