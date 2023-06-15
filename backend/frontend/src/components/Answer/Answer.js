@@ -41,7 +41,7 @@ const Answer = ({
             propagate: propagate
         };
 
-        const csrftoken = getCookie('csrfToken');
+        const csrftoken = getCookie('csrftoken');
 
         fetch(`/api/answers/${answer.id}/`, {
             method: 'PATCH',
@@ -62,7 +62,7 @@ const Answer = ({
         const points = event.target.points.value;
         const feedback = event.target.feedback.value;
 
-        const csrfToken = getCookie('csrfToken');
+        const csrfToken = getCookie('csrftoken');
 
         fetch(`/api/answers/${answer.id}/`, {
             method: 'PATCH',

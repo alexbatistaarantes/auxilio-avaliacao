@@ -36,13 +36,13 @@ const FieldPage = () => {
         setGroupToAnswers(groupId);
     }
     const setGroupToAnswers = (groupId) => {
-        //const csrftoken = getCookie('csrftoken');
+        const csrftoken = getCookie('csrftoken');
 
         fetch(`/api/update_answers_group`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                //'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken
             },
             body: JSON.stringify({
                 group: groupId,
@@ -56,11 +56,13 @@ const FieldPage = () => {
     }
 
     const groupAutomatically = () => {
+        const csrftoken = getCookie('csrftoken');
+
         fetch(`/api/sort`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                //'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken
             },
             body: JSON.stringify({
                 field: field_id,

@@ -10,7 +10,7 @@ const AnswerGroup = ({ answerGroup, onGroupModified }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const csrfToken = getCookie('csrfToken');
+        const csrfToken = getCookie('csrftoken');
 
         fetch(`/api/groups/${answerGroup.id}/`, {
             method: 'PATCH',

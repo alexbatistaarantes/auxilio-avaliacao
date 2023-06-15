@@ -18,7 +18,8 @@ const NewSubmissions = ({ assignment, onNewSubmissionCreated }) => {
             formData.append('images', imageFile);
         });
         
-        const csrfToken = getCookie('csrfToken');
+        const csrfToken = getCookie('csrftoken');
+        console.log(csrfToken);
 
         fetch(`/api/submissions/`, {
             method: 'POST',
